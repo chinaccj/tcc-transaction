@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>tcc-transaction</artifactId>
+    <groupId>com.touna</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <groupId>com.touna</groupId>
+  <artifactId>tcc-dubbo</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>tcc-dubbo</name>
+  <dependencies>
+
+    <dependency>
+      <groupId>com.touna</groupId>
+      <artifactId>tcc-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>dubbo</artifactId>
+      <version>2.5.4-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring</artifactId>
+          <groupId>org.springframework</groupId>
+        </exclusion>
+      </exclusions>
+      <!--<exclusions>-->
+      <!--<exclusion>-->
+      <!--<groupId>org.springframework</groupId>-->
+      <!--<artifactId>*</artifactId>-->
+      <!--</exclusion>-->
+      <!--</exclusions>-->
+
+    </dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="order">
+	<!--resultMap'type is Aliases, id is reference for select -->
+	<resultMap type="order" id="order">
+		<id column="id" property="id"/>
+		<id column="product" property="desc"/>
+		<result column="price" property="price"/>
+	</resultMap>
+
+	<!--parameterType is for Aliases, if for resultMap's id, should use parameterMap instead-->
+	<select id="createOrder" parameterType="order" resultMap="order">
+		insert into tb_order (id,price,product) VALUES (#{id},#{price},#{product})
+	</select>
+
+</mapper>
