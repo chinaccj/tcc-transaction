@@ -4,6 +4,7 @@ package com.touna.tcc.core.interceptor;
  * Created by chenchaojian on 17/5/10.
  */
 
+import com.touna.tcc.core.TwoPhaseBusinessAction;
 import com.touna.tcc.core.transaction.TransactionManager;
 import com.touna.tcc.core.transaction.TransactionStatus;
 import com.touna.tcc.core.transaction.TransactionSynchronizationManager;
@@ -15,13 +16,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
 
+import java.lang.annotation.Annotation;
+import java.util.Map;
+
 @Aspect
 public class TCCTransactionInterceptor implements BeanFactoryAware, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(TCCTransactionInterceptor.class);
 
     private BeanFactory beanFactory;
 
-    private  String transactionManagerBeanName;// = "cc_transaction";
+    private  String transactionManagerBeanName;// = "tccTransaction";
     private TransactionManager transactionManager = null;
 
     @Around("@annotation(com.touna.tcc.core.TCCTransactional)")

@@ -37,22 +37,6 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
-    <!--tcc 配置-->
-    <bean id="tccTransactionInterceptor" class="com.touna.tcc.core.interceptor.TCCTransactionInterceptor" >
-        <property name="transactionManagerBeanName" value="tcc_transaction"/>
-    </bean>
-
-    <bean id="txLogService" class="com.touna.tcc.core.log.service.TxLogServiceImpl" />
-
-    <bean id="childTxLogService" class="com.touna.tcc.core.log.service.ChildTxLogServiceImpl" />
-
-
-    <bean id="tcc_transaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">
-        <property name="txLogService" ref="txLogService"></property>
-        <property name="childTxLogService" ref="childTxLogService"></property>
-    </bean>
-
-
     <!--demo-->
     <dubbo:application name="demo-trading-consumer"  />
     <dubbo:registry address="zookeeper://127.0.0.1:2181" client="zkclient" check="false" />
@@ -60,6 +44,8 @@
     <dubbo:monitor protocol="registry" />
     <dubbo:reference id="accountFacade" interface=" com.touna.tcc.demo.pay.facade.intf.AccountFacade" loadbalance="roundrobin">
     </dubbo:reference>
+
+    <import resource="classpath:config/demo-trading-tcc.xml"/>
 
 </beans>
 

@@ -5,6 +5,7 @@ import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by chenchaojian on 17/5/21.
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TransactionSynchronizationManager {
     static final NamedThreadLocal<Transaction> transactionHolder = new NamedThreadLocal<Transaction>("tcc local transaction");
 
-    static final NamedThreadLocal<Map<String,TCCInvokeMetadata>> invokeMetadataHolder = new NamedThreadLocal<Map<String,TCCInvokeMetadata>>("tcc local invocation metadata");
+    static final NamedThreadLocal<ConcurrentMap<String,TCCInvokeMetadata>> invokeMetadataHolder = new NamedThreadLocal<ConcurrentMap<String,TCCInvokeMetadata>>("tcc local invocation metadata");
 
     static final Object lock = new Object();
 
@@ -38,7 +39,7 @@ public class TransactionSynchronizationManager {
     }
 
     public static void setTCCInvokeMetadata(TCCInvokeMetadata invokeMetadata){
-        Map<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
+        ConcurrentMap<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
         if(metadataMap == null){
             synchronized (lock) {
                 if(metadataMap == null) {
@@ -47,7 +48,7 @@ public class TransactionSynchronizationManager {
             }
         }
 
-        metadataMap.put(invokeMetadata.getClsName(),invokeMetadata);
+        metadataMap.putIfAbsent(invokeMetadata.getClsName(),invokeMetadata);
         invokeMetadataHolder.set(metadataMap);
 
     }

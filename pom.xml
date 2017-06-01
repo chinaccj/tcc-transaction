@@ -15,7 +15,7 @@
   <properties>
     <spring3.version>3.2.3.RELEASE</spring3.version>
     <tcc.core.version>${project.version}</tcc.core.version>
-
+    <c3p0.version>0.9.1.2</c3p0.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -35,7 +35,27 @@
         <scope>test</scope>
         <version>3.2.3.RELEASE</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis-spring</artifactId>
+        <version>1.1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.30</version>
+      </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>

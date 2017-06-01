@@ -3,27 +3,33 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="tcc_tx">
-  <resultMap id="tx" type="tx" >
-	<result property="xid" column="NAME" jdbcType="VARCHAR"/>
+<mapper namespace="tcc_tx_child">
+  <resultMap id="txChild" type="txChild" >
+	<result property="xid" column="xid" jdbcType="VARCHAR"/>
+	<result property="cXid" column="child_xid" jdbcType="VARCHAR"/>
 	<result property="status" column="status" jdbcType="INTEGER"/>
 	<result property="beginTime" jdbcType="TIMESTAMP" column="begin_time"/>
 	<result property="endTime" jdbcType="TIMESTAMP" column="end_time"/>
 	<result property="duration" column="duration" jdbcType="INTEGER"/>
+	<result property="clsName" column="cls_name" jdbcType="VARCHAR"/>
+	<result property="commitMethod" column="commit_method" jdbcType="VARCHAR"/>
+	<result property="rollbackMethod" column="rollback_method" jdbcType="VARCHAR"/>
+	<result property="paramesTypes" column="parames_types" jdbcType="VARCHAR"/>
+	<result property="paramesValues" column="parames_values" jdbcType="VARCHAR"/>
   </resultMap>
 
-	<update id="updateState" parameterType="tx">
-        update tcc_tx set status=#{status} where xid=#{xid}
+	<update id="updateState" parameterType="txChild">
+        update tcc_tx_child set status=#{status} where xid=#{xid} and child_xid=#{cXid}
     </update>
 
-	<update id="update" parameterType="tx">
-		update tcc_tx set status=#{status},end_time=#{endTime},duration=#{duration} where xid=#{xid}
+	<update id="update" parameterType="txChild">
+		update tcc_tx_child set status=#{status},end_time=#{endTime},duration=#{duration} where xid=#{xid} and child_xid=#{cXid}
 	</update>
     
-    <insert id="insert" parameterType="tx">
-    	insert into tcc_tx
-    	 (xid, status, begin_time)
+    <insert id="insert" parameterType="txChild">
+    	insert into tcc_tx_child
+    	 (child_xid,xid, status, begin_time,cls_name,commit_method,rollback_method,parames_types,parames_values)
     	 values
-    	 (#{xid}, #{status}, now())
+    	 (#{cXid},#{xid}, #{status}, now(),#{clsName},#{commitMethod},#{rollbackMethod},#{paramesTypes},#{paramesValues})
     </insert>
 </mapper>

@@ -1,6 +1,6 @@
 create database tcc;
 
-CREATE TABLE `tcc_xa` (
+CREATE TABLE `tcc_tx` (
   `xid` varchar(40) NOT NULL COMMENT '',
   `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
@@ -11,7 +11,7 @@ CREATE TABLE `tcc_xa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '分布式事务表（热点数据）。为补偿任务提供接口原始数据 ';
 
 
-CREATE TABLE `tcc_child_xa` (
+CREATE TABLE `tcc_tx_child` (
   `child_xid` varchar(40) NOT NULL COMMENT '',
   `xid` varchar(40) NOT NULL COMMENT '',
   `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
@@ -28,7 +28,7 @@ CREATE TABLE `tcc_child_xa` (
   KEY `idx_begin_time` (`begin_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '子布式事务表（热点数据）。为补偿任务提供接口原始数据 ';
 
-CREATE TABLE `tcc_xa_archive` (
+CREATE TABLE `tcc_tx_archive` (
   `xid` varchar(40) NOT NULL COMMENT '',
   `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
@@ -39,7 +39,7 @@ CREATE TABLE `tcc_xa_archive` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '分布式事务表（冷数据）。为补偿任务提供接口原始数据 ';
 
 
-CREATE TABLE `tcc_child_xa_archive` (
+CREATE TABLE `tcc_tx_child_archive` (
   `child_xid` varchar(40) NOT NULL COMMENT '',
   `xid` varchar(40) NOT NULL COMMENT '',
   `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',

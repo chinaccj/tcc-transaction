@@ -25,13 +25,17 @@
           也可在javabean 加上注解@Alias 来自定义别名， 例如： @Alias(user)
           <package name="com.dy.entity"/>
            -->
-        <typeAlias alias="order" type="com.aibi.dao.model.xa.Order"/>
+        <typeAlias alias="tx" type="com.touna.tcc.core.log.dao.model.Tx"/>
+        <typeAlias alias="txChild" type="com.touna.tcc.core.log.dao.model.TxChild"/>
+
 
 
     </typeAliases>
     <!-- 指定映射器路径 -->
     <mappers>
-        <mapper resource="config/sqlmap/order/order.xml" />
+        <mapper resource="config/sqlmap/tcc_tx.xml" />
+        <mapper resource="config/sqlmap/tcc_tx_child.xml" />
+
     </mappers>
 
 </configuration>

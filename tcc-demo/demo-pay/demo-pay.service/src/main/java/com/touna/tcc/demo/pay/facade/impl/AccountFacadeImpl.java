@@ -15,6 +15,9 @@ public class AccountFacadeImpl implements AccountFacade {
     @Override
     public void pay(String uuid,String accountId, Float amount) {
         accountService.pay(uuid,accountId,amount);
+//        if(true){
+//            throw new RuntimeException("xx");
+//        }
     }
 
     @Override

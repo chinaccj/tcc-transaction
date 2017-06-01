@@ -1,13 +1,9 @@
 package com.touna.tcc.dubbo.filter;
 
 import com.alibaba.dubbo.rpc.Result;
-import com.touna.tcc.core.TCCFrameworkException;
 import com.touna.tcc.core.TwoPhaseBusinessAction;
-import com.touna.tcc.core.log.service.ChildTxLogService;
-import com.touna.tcc.core.transaction.TCCInvokeMetadata;
-import com.touna.tcc.core.transaction.Transaction;
-import com.touna.tcc.core.transaction.TransactionSynchronizationManager;
-import com.touna.tcc.core.transaction.XidGenerator;
+import com.touna.tcc.core.log.service.TxChildLogService;
+import com.touna.tcc.core.transaction.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,10 +24,7 @@ import java.lang.reflect.Method;
 public class TCCTransactionFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(TCCTransactionFilter.class);
 
-
-    private ChildTxLogService childTxLogService;
-
-
+    private AbstractTransactionManager tccTransaction;
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
@@ -67,19 +60,20 @@ public class TCCTransactionFilter implements Filter {
                         invokeMetadata.setcXid(cXid);
                         TransactionSynchronizationManager.setTCCInvokeMetadata(invokeMetadata);
 
-                        childTxLogService.begin(xid,cXid,cls.getName(),commitMethod,rollbackMethod,paramsTypes,arguments);
+                        tccTransaction.getTxChildLogService().begin(xid, cXid, cls.getName(), commitMethod, rollbackMethod, paramsTypes, arguments);
 
                     }
 
                 }
             }
-        }catch (NoSuchMethodException ex){
-            logger.error(ex.getMessage(),ex);
-            throw new TCCFrameworkException(ex.getMessage(),ex);
         }
-        catch (Exception ex){
+        catch (Throwable ex){
             logger.error(ex.getMessage(),ex);
-            throw new TCCFrameworkException(ex.getMessage(),ex);
+
+            RpcResult rpcResult = new RpcResult();
+            rpcResult.setException(ex);
+
+            return rpcResult;
         }
 
 
@@ -88,11 +82,11 @@ public class TCCTransactionFilter implements Filter {
         return result;
     }
 
-    public ChildTxLogService getChildTxLogService() {
-        return childTxLogService;
+    public AbstractTransactionManager getTccTransaction() {
+        return tccTransaction;
     }
 
-    public void setChildTxLogService(ChildTxLogService childTxLogService) {
-        this.childTxLogService = childTxLogService;
+    public void setTccTransaction(AbstractTransactionManager tccTransaction) {
+        this.tccTransaction = tccTransaction;
     }
 }

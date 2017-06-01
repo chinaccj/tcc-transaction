@@ -54,17 +54,17 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
                 Method method = proxy.getClass().getMethod(rollbackMethod, parameterTypes);
                 method.invoke(proxy, paramValues);
-                childTxLogService.rollback(tx.getXid(), invokeMetadata.getcXid());
+                txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid(), tx.getBeginTimeMillis());
 
                 excuteTimes --;
             }catch (Throwable e) {
                 logger.error("rollback error clsName="+clsName+" rollbackMethod="+rollbackMethod,e);
-                childTxLogService.rollbackFail(tx.getXid(), invokeMetadata.getcXid());
+                txChildLogService.rollbackFail(tx.getXid(), invokeMetadata.getcXid());
             }
         }
 
         if(excuteTimes == 0){
-            txLogService.finish(xid);
+            txLogService.finish(xid,tx.getBeginTimeMillis());
         }else {
             txLogService.rollbackFail(xid);
         }
@@ -104,16 +104,16 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
                 Method method = proxy.getClass().getMethod(commitMethod, parameterTypes);
                 method.invoke(proxy, paramValues);
-                childTxLogService.finish(xid, invokeMetadata.getcXid());
+                txChildLogService.finish(xid, invokeMetadata.getcXid(),tx.getBeginTimeMillis());
                 excuteTimes --;
             }catch (Throwable e) {
                 logger.error("commit error clsName="+clsName+" commitMethod="+commitMethod,e);
-                childTxLogService.confirmFail(xid,invokeMetadata.getcXid());
+                txChildLogService.confirmFail(xid,invokeMetadata.getcXid());
             }
         }
 
         if(excuteTimes == 0){
-            txLogService.finish(xid);
+            txLogService.finish(xid,tx.getBeginTimeMillis());
         }else {
             txLogService.comfirmFail(xid);
         }

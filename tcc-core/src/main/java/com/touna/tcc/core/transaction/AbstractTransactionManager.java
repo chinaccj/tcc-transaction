@@ -1,6 +1,6 @@
 package com.touna.tcc.core.transaction;
 
-import com.touna.tcc.core.log.service.ChildTxLogService;
+import com.touna.tcc.core.log.service.TxChildLogService;
 import com.touna.tcc.core.log.service.TxLogService;
 import com.touna.tcc.core.support.DefaultTransactionStatus;
 import org.springframework.beans.BeansException;
@@ -16,7 +16,7 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
      * 记录服务
      */
     protected TxLogService txLogService;
-    protected ChildTxLogService childTxLogService;
+    protected TxChildLogService txChildLogService;
 
     protected BeanFactory beanFactory;
 
@@ -84,12 +84,12 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
         this.txLogService = txLogService;
     }
 
-    public ChildTxLogService getChildTxLogService() {
-        return childTxLogService;
+    public TxChildLogService getTxChildLogService() {
+        return txChildLogService;
     }
 
-    public void setChildTxLogService(ChildTxLogService childTxLogService) {
-        this.childTxLogService = childTxLogService;
+    public void setTxChildLogService(TxChildLogService txChildLogService) {
+        this.txChildLogService = txChildLogService;
     }
 
     @Override

@@ -25,11 +25,18 @@ public class Transaction {
      */
     private XaState xaState;
 
+    private long beginTimeMillis;
+
     public Transaction(String xid) {
         this.xid = xid;
+        beginTimeMillis = System.currentTimeMillis();
     }
 
     public String getXid() {
         return xid;
+    }
+
+    public long getBeginTimeMillis() {
+        return beginTimeMillis;
     }
 }
