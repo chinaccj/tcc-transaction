@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tcc_tx">
+  <resultMap id="tx" type="tx" >
+	<result property="xid" column="NAME" jdbcType="VARCHAR"/>
+	<result property="status" column="status" jdbcType="INTEGER"/>
+	<result property="beginTime" jdbcType="TIMESTAMP" column="begin_time"/>
+	<result property="endTime" jdbcType="TIMESTAMP" column="end_time"/>
+	<result property="duration" column="duration" jdbcType="INTEGER"/>
+  </resultMap>
+
+	<update id="update" parameterType="xa">
+        update tcc_xa set status=#{status} where xid=#{xid}
+    </update>
+    
+    <insert id="insert" parameterType="Contactor" useGeneratedKeys="true" keyProperty="id">
+    	insert into tcc_xa
+    	 (xid, status, beginTime, endTime)
+    	 values
+    	 (#{xid}, #{status}, #{beginTime}, #{endTime})
+    </insert>
+</mapper>

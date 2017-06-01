@@ -25,7 +25,7 @@
           也可在javabean 加上注解@Alias 来自定义别名， 例如： @Alias(user)
           <package name="com.dy.entity"/>
            -->
-        <typeAlias alias="order" type="com.touna.singlepc.demo.trading.dao.model.xa.Order"/>
+        <typeAlias alias="order" type="com.aibi.dao.model.xa.Order"/>
 
 
     </typeAliases>
