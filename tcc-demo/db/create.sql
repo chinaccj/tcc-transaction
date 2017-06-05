@@ -2,7 +2,7 @@ create database tcc;
 
 CREATE TABLE `tcc_tx` (
   `xid` varchar(40) NOT NULL COMMENT '',
-  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
+  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:try success,3 try fail,4:confirm fail,5:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
   `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '事务结束时间',
   `duration` int DEFAULT 0 COMMENT '事务执行时间',
@@ -14,7 +14,7 @@ CREATE TABLE `tcc_tx` (
 CREATE TABLE `tcc_tx_child` (
   `child_xid` varchar(40) NOT NULL COMMENT '',
   `xid` varchar(40) NOT NULL COMMENT '',
-  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
+  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:try success ,4:confirm fail,5:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
   `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '事务结束时间',
   `duration` int DEFAULT 0 COMMENT '事务执行时间',
@@ -30,7 +30,7 @@ CREATE TABLE `tcc_tx_child` (
 
 CREATE TABLE `tcc_tx_archive` (
   `xid` varchar(40) NOT NULL COMMENT '',
-  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
+  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:try success,3 try fail,4:confirm fail,5:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
   `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '事务结束时间',
   `duration` int DEFAULT 0 COMMENT '事务执行时间',
@@ -42,7 +42,7 @@ CREATE TABLE `tcc_tx_archive` (
 CREATE TABLE `tcc_tx_child_archive` (
   `child_xid` varchar(40) NOT NULL COMMENT '',
   `xid` varchar(40) NOT NULL COMMENT '',
-  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:confirm fail,3:rollback fail',
+  `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:try success,4:confirm fail,5:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
   `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '事务结束时间',
   `duration` int DEFAULT 0 COMMENT '事务执行时间',

@@ -28,56 +28,58 @@ public class TCCTransactionFilter implements Filter {
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        try{
-
-            Transaction txObject = TransactionSynchronizationManager.getResource();
-            if(txObject != null){//tcc分布式事务内的dubbo调用
-                String xid = txObject.getXid();
-                Class cls = invoker.getInterface();
-                String methodName = invocation.getMethodName();
-                Class[] paramsTypes = invocation.getParameterTypes();
-                Method method = cls.getDeclaredMethod(methodName, paramsTypes);
-                TwoPhaseBusinessAction annotation = method.getAnnotation(TwoPhaseBusinessAction.class);
-
-                // dubbo filter 只需要记录try 阶段的数据,commit 和rollback阶段的在transactionManager记录
-                if(annotation != null){
-                    String commitMethod = annotation.commitMethod();
-                    String rollbackMethod = annotation.rollbackMethod();
-
-
-                    //TCCInvokeMetadata not in threadlocal
-                    if(TransactionSynchronizationManager.getInvokeMetadata(cls.getName()) == null) {//try阶段
-                        Object[] arguments = invocation.getArguments();
-
-                        String cXid = XidGenerator.newCXid();
-
-                        TCCInvokeMetadata invokeMetadata = new TCCInvokeMetadata();
-                        invokeMetadata.setClsName(cls.getName());
-                        invokeMetadata.setCommitMethod(commitMethod);
-                        invokeMetadata.setRollbackMethod(rollbackMethod);
-                        invokeMetadata.setParamsTypes(paramsTypes);
-                        invokeMetadata.setParamValues(arguments);
-                        invokeMetadata.setcXid(cXid);
-                        TransactionSynchronizationManager.setTCCInvokeMetadata(invokeMetadata);
-
-                        tccTransaction.getTxChildLogService().begin(xid, cXid, cls.getName(), commitMethod, rollbackMethod, paramsTypes, arguments);
-
-                    }
-
-                }
-            }
-        }
-        catch (Throwable ex){
-            logger.error(ex.getMessage(),ex);
-
-            RpcResult rpcResult = new RpcResult();
-            rpcResult.setException(ex);
-
-            return rpcResult;
-        }
 
 
         Result result = invoker.invoke(invocation);
+
+        if(result.getException() == null) {//try 阶段调用成功后记录日志。如果调用失败不需要记录日志
+            try {
+                Transaction txObject = TransactionSynchronizationManager.getResource();
+                if (txObject != null) {//tcc分布式事务内的dubbo调用
+                    String xid = txObject.getXid();
+                    Class cls = invoker.getInterface();
+                    String methodName = invocation.getMethodName();
+                    Class[] paramsTypes = invocation.getParameterTypes();
+                    Method method = cls.getDeclaredMethod(methodName, paramsTypes);
+                    TwoPhaseBusinessAction annotation = method.getAnnotation(TwoPhaseBusinessAction.class);
+
+                    // dubbo filter 只需要记录try 阶段的数据,commit 和rollback阶段的在transactionManager记录
+                    if (annotation != null) {
+                        String commitMethod = annotation.commitMethod();
+                        String rollbackMethod = annotation.rollbackMethod();
+
+
+                        //TCCInvokeMetadata not in threadlocal
+                        if (TransactionSynchronizationManager.getInvokeMetadata(cls.getName()) == null) {//try阶段
+                            Object[] arguments = invocation.getArguments();
+
+                            String cXid = XidGenerator.newCXid();
+
+                            TCCInvokeMetadata invokeMetadata = new TCCInvokeMetadata();
+                            invokeMetadata.setClsName(cls.getName());
+                            invokeMetadata.setCommitMethod(commitMethod);
+                            invokeMetadata.setRollbackMethod(rollbackMethod);
+                            invokeMetadata.setParamsTypes(paramsTypes);
+                            invokeMetadata.setParamValues(arguments);
+                            invokeMetadata.setcXid(cXid);
+                            TransactionSynchronizationManager.setTCCInvokeMetadata(invokeMetadata);
+
+                            tccTransaction.getTxChildLogService().trySuccess(xid, cXid, cls.getName(), commitMethod, rollbackMethod, paramsTypes, arguments);
+
+                        }
+
+                    }
+                }
+            } catch (Throwable ex) {
+                logger.error(ex.getMessage(), ex);
+
+                RpcResult rpcResult = new RpcResult();
+                rpcResult.setException(ex);
+
+                return rpcResult;
+            }
+
+        }
 
         return result;
     }

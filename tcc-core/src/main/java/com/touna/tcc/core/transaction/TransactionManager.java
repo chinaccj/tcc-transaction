@@ -12,12 +12,12 @@ public interface TransactionManager {
     /**
      * 提交事务
      */
-    void commit(TransactionStatus status);
+    void commit(TransactionInfo txInfo);
 
     /**
      * 回滚事务
      */
-    void rollback(TransactionStatus status);
+    void rollback(TransactionInfo txInfo);
 
 
     TransactionStatus getTransaction();

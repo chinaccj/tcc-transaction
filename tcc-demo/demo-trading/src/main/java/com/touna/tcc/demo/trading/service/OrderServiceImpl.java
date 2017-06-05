@@ -3,6 +3,7 @@ package com.touna.tcc.demo.trading.service;
 import com.touna.tcc.core.TCCTransactional;
 import com.touna.tcc.demo.pay.facade.intf.AccountFacade;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -18,9 +19,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @TCCTransactional
+    @Transactional
     public void placeOrder(String userId,String productId,Float price) {
         String uuid = UUID.randomUUID().toString();
         accountFacade.pay(uuid,"1",price);
+    }
+
+    @Override
+    public void placeOrderWithTryException(String userId, String productId, Float price) {
+
+    }
+
+    @Override
+    public void placeOrderWithCommitException(String userId, String productId, Float price) {
+
+    }
+
+    @Override
+    public void placeOrderWithRollbackException(String userId, String productId, Float price) {
+
     }
 
 

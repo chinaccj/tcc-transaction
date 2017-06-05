@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.touna.tcc.core.interceptor.TransactionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -24,7 +25,7 @@ public class DubboTransactionManager extends AbstractTransactionManager
     protected ConcurrentHashMap<String, Object> proxyCache = new ConcurrentHashMap<String, Object>();
 
     @Override
-    public void doRollback(TransactionStatus status) {
+    public void doRollback(TransactionInfo txInfo) {
 
         List<TCCInvokeMetadata> listInvokeMetadata = TransactionSynchronizationManager
                 .getInvokeMetadataList();
@@ -72,7 +73,7 @@ public class DubboTransactionManager extends AbstractTransactionManager
     }
 
 
-    public void doCommit(TransactionStatus status) {
+    public void doCommit(TransactionInfo txInfo) {
 
         List<TCCInvokeMetadata> listInvokeMetadata = TransactionSynchronizationManager
             .getInvokeMetadataList();

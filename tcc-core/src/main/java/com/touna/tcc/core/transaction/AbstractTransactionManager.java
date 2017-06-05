@@ -1,5 +1,6 @@
 package com.touna.tcc.core.transaction;
 
+import com.touna.tcc.core.interceptor.TransactionInfo;
 import com.touna.tcc.core.log.service.TxChildLogService;
 import com.touna.tcc.core.log.service.TxLogService;
 import com.touna.tcc.core.support.DefaultTransactionStatus;
@@ -55,23 +56,24 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
      * 提交由第三方SOA 框架实现
      */
     @Override
-    public  void commit(TransactionStatus status){
-        if(status.isNewTransaction()){//else 非最外层方法，不做处理
-            doCommit(status);
+    public  void commit(TransactionInfo txInfo){
+        if(txInfo.getTransactionStatus().isNewTransaction()){//else 非最外层方法，不做处理
+
+            doCommit(txInfo);
         }
     }
 
-    public abstract void doCommit(TransactionStatus status);
+    public abstract void doCommit(TransactionInfo txInfo);
 
-    public abstract void  doRollback(TransactionStatus status);
+    public abstract void  doRollback(TransactionInfo txInfo);
 
     /**
      *  回滚由第三方SOA 框架实现
      */
     @Override
-    public void rollback(TransactionStatus status){
-        if(status.isNewTransaction()){//else 非最外层方法，不做处理
-            doRollback(status);
+    public void rollback(TransactionInfo txInfo){
+        if(txInfo.getTransactionStatus().isNewTransaction()){//else 非最外层方法，不做处理
+            doRollback(txInfo);
         }
     }
 

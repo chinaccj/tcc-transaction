@@ -18,15 +18,15 @@
         <property name="transactionManagerBeanName" value="tccTransaction"/>
     </bean>
 
-    <!--<bean id="tcc_transaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">-->
-        <!--<property name="txLogService" ref="txLogService"></property>-->
-        <!--<property name="txChildLogService" ref="txChildLogService"></property>-->
-    <!--</bean>-->
-
     <bean id="tccTransaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">
-        <property name="txLogService" ref="dummyTxLogService"></property>
-        <property name="txChildLogService" ref="dummyTxChildLogService"></property>
+        <property name="txLogService" ref="txLogService"></property>
+        <property name="txChildLogService" ref="txChildLogService"></property>
     </bean>
+
+    <!--<bean id="tccTransaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">-->
+        <!--<property name="txLogService" ref="dummyTxLogService"></property>-->
+        <!--<property name="txChildLogService" ref="dummyTxChildLogService"></property>-->
+    <!--</bean>-->
 
     <import resource="classpath:config/tcc-core-service.xml"/>
 </beans>

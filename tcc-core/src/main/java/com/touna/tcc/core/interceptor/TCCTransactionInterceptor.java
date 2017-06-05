@@ -41,25 +41,32 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
             retVal = point.proceed();
 
             //if not exception throw,excute commit
-            txInfo.getTransactionManager().commit(txInfo.getTransactionStatus());
+            txInfo.getTransactionManager().commit(txInfo);
 
             //
         } catch (Throwable ex) {
             logger.error(ex.toString(),ex);
 
             //回滚
-            txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());
+            txInfo.getTransactionManager().rollback(txInfo);
             throw ex;
         }finally {
             //clear thread local
-            TransactionSynchronizationManager.clear();
+            cleanupTransactionInfo(txInfo);
         }
 
         return retVal;
     }
 
-    protected TransactionInfo createTransactionIfNecessary(TransactionManager tm
-    ){
+    protected void cleanupTransactionInfo(TransactionInfo txInfo){
+        if(txInfo != null) {
+            if (txInfo.getTransactionStatus().isNewTransaction()) {//else 非最外层方法，不做处理
+                TransactionSynchronizationManager.clear();
+            }
+        }
+    }
+
+    protected TransactionInfo createTransactionIfNecessary(TransactionManager tm){
         TransactionStatus status = tm.getTransaction();
         return new TransactionInfo(status,tm);
     }
