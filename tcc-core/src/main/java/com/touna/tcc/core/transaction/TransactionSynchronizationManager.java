@@ -13,7 +13,10 @@ import java.util.concurrent.ConcurrentMap;
 public class TransactionSynchronizationManager {
     static final NamedThreadLocal<Transaction> transactionHolder = new NamedThreadLocal<Transaction>("tcc local transaction");
 
-    static final NamedThreadLocal<ConcurrentMap<String,TCCInvokeMetadata>> invokeMetadataHolder = new NamedThreadLocal<ConcurrentMap<String,TCCInvokeMetadata>>("tcc local invocation metadata");
+    /**
+     * map should be ordered,first in ,first executed.
+     */
+    static final NamedThreadLocal<Map<String,TCCInvokeMetadata>> invokeMetadataHolder = new NamedThreadLocal<Map<String,TCCInvokeMetadata>>("tcc local invocation metadata");
 
     static final Object lock = new Object();
 
@@ -38,18 +41,27 @@ public class TransactionSynchronizationManager {
 
     }
 
-    public static void setTCCInvokeMetadata(TCCInvokeMetadata invokeMetadata){
-        ConcurrentMap<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
+    /**
+     * thread unsafe,tcc not support concurrent call dubbo facade(api).
+     * @param invokeMetadata
+     * @return
+     */
+    public static int setTCCInvokeMetadata(TCCInvokeMetadata invokeMetadata){
+        Map<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
         if(metadataMap == null){
             synchronized (lock) {
                 if(metadataMap == null) {
-                    metadataMap = new ConcurrentHashMap<String, TCCInvokeMetadata>();
+                    //order map
+                    metadataMap = new LinkedHashMap<String, TCCInvokeMetadata>();
                 }
             }
         }
 
-        metadataMap.putIfAbsent(invokeMetadata.getClsName(),invokeMetadata);
+        metadataMap.put(invokeMetadata.getClsName(), invokeMetadata);
+        int mapSize = metadataMap.size();
         invokeMetadataHolder.set(metadataMap);
+
+        return mapSize;
 
     }
 

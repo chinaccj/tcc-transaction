@@ -20,6 +20,11 @@ public class TxChild {
     private String cXid;
 
     /**
+     * executed order, 1 prior 2
+     */
+    private int sequence;
+;
+    /**
      * 0 :begin,1:finish,2:confirm fail,3:rollback fail
      * 参考 com.touna.tcc.core.transaction.XaState
      */
@@ -130,5 +135,13 @@ public class TxChild {
 
     public void setParamesValues(String paramesValues) {
         this.paramesValues = paramesValues;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
     }
 }

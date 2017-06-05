@@ -22,7 +22,7 @@ public class TxChildLogServiceImpl implements TxChildLogService {
     private TxChildDao txChildDao;
 
     @Override
-    public void trySuccess(String xid, String cXid, String clsName, String commitMethod,
+    public void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod,
                       String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
 
         checkParams(xid, cXid, clsName, commitMethod, rollbackMethod, paramsTypes, paramValues);
@@ -43,6 +43,7 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             txChild.setRollbackMethod(rollbackMethod);
             txChild.setStatus(XaState.TRY_SUCCESS.getState());
             txChild.setXid(xid);
+            txChild.setSequence(sequence);
 
             txChildDao.insert(txChild);
 

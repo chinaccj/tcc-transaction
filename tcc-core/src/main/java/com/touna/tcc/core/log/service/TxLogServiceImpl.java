@@ -22,6 +22,15 @@ public class TxLogServiceImpl implements TxLogService {
     }
 
     @Override
+    public void trySuccess(String xid) {
+        Tx tx = new Tx();
+        tx.setXid(xid);
+        tx.setStatus(XaState.TRY_SUCCESS.getState());
+
+        txDao.updateState(tx);
+    }
+
+    @Override
     public void finish(String xid,long beginTimeMillis) {
         Tx tx = new Tx();
         tx.setXid(xid);

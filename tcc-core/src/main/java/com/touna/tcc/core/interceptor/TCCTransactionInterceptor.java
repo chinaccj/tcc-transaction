@@ -5,6 +5,8 @@ package com.touna.tcc.core.interceptor;
  */
 
 import com.touna.tcc.core.TwoPhaseBusinessAction;
+import com.touna.tcc.core.log.service.TxLogService;
+import com.touna.tcc.core.transaction.Transaction;
 import com.touna.tcc.core.transaction.TransactionManager;
 import com.touna.tcc.core.transaction.TransactionStatus;
 import com.touna.tcc.core.transaction.TransactionSynchronizationManager;
@@ -28,6 +30,8 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
     private  String transactionManagerBeanName;// = "tccTransaction";
     private TransactionManager transactionManager = null;
 
+    private TxLogService txLogService;
+
     @Around("@annotation(com.touna.tcc.core.TCCTransactional)")
     public Object around(ProceedingJoinPoint point) throws Throwable {
 
@@ -40,7 +44,10 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
 
             retVal = point.proceed();
 
-            //if not exception throw,excute commit
+            //try success log
+            logTrySuccess();
+
+            //commit
             txInfo.getTransactionManager().commit(txInfo);
 
             //
@@ -58,6 +65,13 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
         return retVal;
     }
 
+    protected void logTrySuccess(){
+        Transaction tx = TransactionSynchronizationManager.getResource();
+        String xid = tx.getXid();
+
+        txLogService.trySuccess(xid);
+
+    }
     protected void cleanupTransactionInfo(TransactionInfo txInfo){
         if(txInfo != null) {
             if (txInfo.getTransactionStatus().isNewTransaction()) {//else 非最外层方法，不做处理
@@ -103,6 +117,14 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
 
     public void setTransactionManagerBeanName(String transactionManagerBeanName) {
         this.transactionManagerBeanName = transactionManagerBeanName;
+    }
+
+    public TxLogService getTxLogService() {
+        return txLogService;
+    }
+
+    public void setTxLogService(TxLogService txLogService) {
+        this.txLogService = txLogService;
     }
 }
 

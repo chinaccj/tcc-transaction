@@ -11,7 +11,7 @@ public enum  XaState {
     FINISH(1,"FINISH"),
 
     /**
-     * only child tx need this state.
+     *
      */
     TRY_SUCCESS(2,"TRY_SUCCESS"),
     /**

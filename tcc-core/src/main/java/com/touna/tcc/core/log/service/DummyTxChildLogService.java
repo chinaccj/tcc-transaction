@@ -9,7 +9,7 @@ package com.touna.tcc.core.log.service;
  */
 public class DummyTxChildLogService implements TxChildLogService{
     @Override
-    public void trySuccess(String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+    public void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
 
     }
 

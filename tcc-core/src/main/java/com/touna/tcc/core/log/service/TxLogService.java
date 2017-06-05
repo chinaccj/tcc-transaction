@@ -20,6 +20,8 @@ public interface TxLogService {
      */
     void begin(String xid);
 
+    void trySuccess(String xid);
+
     void finish(String xid,long beginTimeMillis);
 
     void comfirmFail(String xid);

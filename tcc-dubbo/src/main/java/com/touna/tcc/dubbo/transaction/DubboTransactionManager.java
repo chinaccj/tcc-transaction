@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.touna.tcc.core.interceptor.TransactionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import com.touna.tcc.core.interceptor.TransactionInfo;
 import com.touna.tcc.core.transaction.*;
 
 /**
@@ -28,7 +28,7 @@ public class DubboTransactionManager extends AbstractTransactionManager
     public void doRollback(TransactionInfo txInfo) {
 
         List<TCCInvokeMetadata> listInvokeMetadata = TransactionSynchronizationManager
-                .getInvokeMetadataList();
+            .getInvokeMetadataList();
 
         if (listInvokeMetadata == null) {
             //出现这种情况的一种可能是加了@TCCTransactional 注解，但是方法里面没有调用dubbo的接口
@@ -38,15 +38,16 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
         Transaction tx = TransactionSynchronizationManager.getResource();
         String xid = tx.getXid();
-        int excuteTimes = listInvokeMetadata.size();
-
-        for (TCCInvokeMetadata invokeMetadata : listInvokeMetadata) {
-            String clsName = invokeMetadata.getClsName();
-            String rollbackMethod = invokeMetadata.getRollbackMethod();
-            Class[] parameterTypes = invokeMetadata.getParamsTypes();
-            Object[] paramValues = invokeMetadata.getParamValues();
-
-            try {
+        /*
+          rollback will be executed sequentially,if some node fail,follower node will not execute.
+          failed node and not executed node will be redo by compensatory job
+         */
+        try {
+            for (TCCInvokeMetadata invokeMetadata : listInvokeMetadata) {
+                String clsName = invokeMetadata.getClsName();
+                String rollbackMethod = invokeMetadata.getRollbackMethod();
+                Class[] parameterTypes = invokeMetadata.getParamsTypes();
+                Object[] paramValues = invokeMetadata.getParamValues();
 
                 Object proxy = proxyCache.get(clsName);
                 if (proxy == null) {
@@ -55,23 +56,19 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
                 Method method = proxy.getClass().getMethod(rollbackMethod, parameterTypes);
                 method.invoke(proxy, paramValues);
-                txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid(), tx.getBeginTimeMillis());
+                txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid(),
+                    tx.getBeginTimeMillis());
 
-                excuteTimes --;
-            }catch (Throwable e) {
-                logger.error("rollback error clsName="+clsName+" rollbackMethod="+rollbackMethod,e);
-                txChildLogService.rollbackFail(tx.getXid(), invokeMetadata.getcXid());
             }
-        }
 
-        if(excuteTimes == 0){
-            txLogService.finish(xid,tx.getBeginTimeMillis());
-        }else {
+            txLogService.finish(xid, tx.getBeginTimeMillis());
+
+        } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
             txLogService.rollbackFail(xid);
         }
 
     }
-
 
     public void doCommit(TransactionInfo txInfo) {
 
@@ -79,49 +76,43 @@ public class DubboTransactionManager extends AbstractTransactionManager
             .getInvokeMetadataList();
 
         if (listInvokeMetadata == null) {
-           //出现这种情况的一种可能是加了@TCCTransactional 注解，但是方法里面没有调用dubbo的接口
+            //出现这种情况的一种可能是加了@TCCTransactional 注解，但是方法里面没有调用dubbo的接口
             logger.warn("can not get listInvokeMetadata from TransactionSynchronizationManager. ");
             return;
         }
 
         Transaction tx = TransactionSynchronizationManager.getResource();
         String xid = tx.getXid();
-        int excuteTimes = listInvokeMetadata.size();
 
-        for (TCCInvokeMetadata invokeMetadata : listInvokeMetadata) {
-            String clsName = invokeMetadata.getClsName();
-            String commitMethod = invokeMetadata.getCommitMethod();
-            Class[] parameterTypes = invokeMetadata.getParamsTypes();
-            Object[] paramValues = invokeMetadata.getParamValues();
-
-            //commit 操作不可回滚，如果有失败的，只能通过补偿任务重做
-            try {
+        //commit will be executed sequentially,if some node fail,follower node will not execute.
+        //failed node and not executed node will be redo by compensatory job
+        try {
+            for (TCCInvokeMetadata invokeMetadata : listInvokeMetadata) {
+                String clsName = invokeMetadata.getClsName();
+                String commitMethod = invokeMetadata.getCommitMethod();
+                Class[] parameterTypes = invokeMetadata.getParamsTypes();
+                Object[] paramValues = invokeMetadata.getParamValues();
 
                 Object proxy = proxyCache.get(clsName);
                 if (proxy == null) {
-                    //       System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
                     proxy = loadProxy(clsName);
                 }
 
                 Method method = proxy.getClass().getMethod(commitMethod, parameterTypes);
                 method.invoke(proxy, paramValues);
-                txChildLogService.finish(xid, invokeMetadata.getcXid(),tx.getBeginTimeMillis());
-                excuteTimes --;
-            }catch (Throwable e) {
-                logger.error("commit error clsName="+clsName+" commitMethod="+commitMethod,e);
-                txChildLogService.confirmFail(xid,invokeMetadata.getcXid());
-            }
-        }
 
-        if(excuteTimes == 0){
-            txLogService.finish(xid,tx.getBeginTimeMillis());
-        }else {
+                txChildLogService.finish(xid, invokeMetadata.getcXid(), tx.getBeginTimeMillis());
+
+            }
+
+            txLogService.finish(xid, tx.getBeginTimeMillis());
+
+        } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
             txLogService.comfirmFail(xid);
         }
 
     }
-
-
 
     private Object loadProxy(String clsName) {
         if (beanFactory instanceof DefaultListableBeanFactory) {

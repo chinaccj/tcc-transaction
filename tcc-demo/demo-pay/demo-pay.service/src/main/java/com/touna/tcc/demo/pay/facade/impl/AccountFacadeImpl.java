@@ -22,6 +22,9 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void payCommit(String uuid, String accountId, Float amount) {
+        if(true){
+            throw new RuntimeException("xx");
+        }
         accountService.payCommit(uuid,accountId,amount);
     }
 

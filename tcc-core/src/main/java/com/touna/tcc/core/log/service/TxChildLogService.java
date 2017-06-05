@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface TxChildLogService {
     /**
-     *
+     * @param sequence child tx 执行顺序
      * @param xid
      * @param cXid
      * @param clsName
@@ -16,7 +16,7 @@ public interface TxChildLogService {
      * @param paramsTypes
      * @param paramValues  为了序列化和反序列化方便，paramValues存储的是 List<Object[]>通过kryo 序列化的结果
      */
-    void trySuccess(String xid, String cXid, String clsName, String commitMethod,
+    void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod,
                           String rollbackMethod, Class[] paramsTypes, Object []paramValues);
 
     void finish(String xid,String cXid,long beginTimeMillis);

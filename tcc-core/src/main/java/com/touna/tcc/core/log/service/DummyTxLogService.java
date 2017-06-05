@@ -14,6 +14,11 @@ public class DummyTxLogService implements TxLogService {
     }
 
     @Override
+    public void trySuccess(String xid) {
+
+    }
+
+    @Override
     public void finish(String xid, long beginTimeMillis) {
 
     }

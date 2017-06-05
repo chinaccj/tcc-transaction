@@ -18,9 +18,12 @@ public class OrderServiceImpl implements OrderService {
     AccountFacade accountFacade;
 
     @Override
-    @TCCTransactional
+    @TCCTransactional()
     @Transactional
     public void placeOrder(String userId,String productId,Float price) {
+        String xid = "";
+
+
         String uuid = UUID.randomUUID().toString();
         accountFacade.pay(uuid,"1",price);
     }

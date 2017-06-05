@@ -14,6 +14,7 @@ CREATE TABLE `tcc_tx` (
 CREATE TABLE `tcc_tx_child` (
   `child_xid` varchar(40) NOT NULL COMMENT '',
   `xid` varchar(40) NOT NULL COMMENT '',
+  `sequence` INT DEFAULT 0 COMMENT 'child xid 执行顺序。1优先2',
   `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:try success ,4:confirm fail,5:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
   `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '事务结束时间',
@@ -42,6 +43,7 @@ CREATE TABLE `tcc_tx_archive` (
 CREATE TABLE `tcc_tx_child_archive` (
   `child_xid` varchar(40) NOT NULL COMMENT '',
   `xid` varchar(40) NOT NULL COMMENT '',
+  `sequence` INT DEFAULT 0 COMMENT 'child xid 执行顺序。1优先2',
   `status` TINYINT DEFAULT 0 COMMENT '0 :begin,1:finish,2:try success,4:confirm fail,5:rollback fail',
   `begin_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '事务开始时间',
   `end_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '事务结束时间',
