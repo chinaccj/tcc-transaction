@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by chenchaojian on 17/5/21.
@@ -17,6 +18,9 @@ public class TransactionSynchronizationManager {
      * map should be ordered,first in ,first executed.
      */
     static final NamedThreadLocal<Map<String,TCCInvokeMetadata>> invokeMetadataHolder = new NamedThreadLocal<Map<String,TCCInvokeMetadata>>("tcc local invocation metadata");
+
+    static final NamedThreadLocal<AtomicInteger> childTxIndexHolder = new NamedThreadLocal<AtomicInteger>("tcc local child tx holder");
+
 
     static final Object lock = new Object();
 
@@ -46,7 +50,7 @@ public class TransactionSynchronizationManager {
      * @param invokeMetadata
      * @return
      */
-    public static int setTCCInvokeMetadata(TCCInvokeMetadata invokeMetadata){
+    public static void setTCCInvokeMetadata(TCCInvokeMetadata invokeMetadata){
         Map<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
         if(metadataMap == null){
             synchronized (lock) {
@@ -58,11 +62,17 @@ public class TransactionSynchronizationManager {
         }
 
         metadataMap.put(invokeMetadata.getClsName(), invokeMetadata);
-        int mapSize = metadataMap.size();
         invokeMetadataHolder.set(metadataMap);
+    }
 
-        return mapSize;
+    public static int newChildTxIndex(){
+        AtomicInteger holder = childTxIndexHolder.get();
+        if(holder == null) holder = new AtomicInteger();
 
+        int index = holder.incrementAndGet();
+
+        childTxIndexHolder.set(holder);
+        return index;
     }
 
     public static void bindResource(Transaction txObject){

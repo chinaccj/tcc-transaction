@@ -14,7 +14,7 @@
 
 
     <!--tcc 配置-->
-    <bean id="tccTransactionInterceptor" class="com.touna.tcc.core.interceptor.TCCTransactionInterceptor" >
+    <bean id="tccTransactionInterceptor" class="com.touna.tcc.core.interceptor.TccTransactionInterceptor" >
         <property name="txLogService" ref="txLogService"></property>
         <property name="transactionManagerBeanName" value="tccTransaction"/>
     </bean>

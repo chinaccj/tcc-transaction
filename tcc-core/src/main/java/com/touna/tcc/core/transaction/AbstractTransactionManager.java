@@ -21,16 +21,16 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
 
     protected BeanFactory beanFactory;
 
-    public final TransactionStatus getTransaction() {
+    public final TransactionStatus getTransaction(String xid) {
         Transaction tx = TransactionSynchronizationManager.getResource();
         if (tx != null) {
             return new DefaultTransactionStatus(false,tx);
         }
-        else {//if transaction not exist ,create one
-            String xid = XidGenerator.newXid();
-
+        else
+        {
             tx = new Transaction(xid);
 
+            //begin transaction
             begin(tx);
 
             TransactionSynchronizationManager.bindResource(tx);
@@ -44,7 +44,6 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
 
 //        System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
 
-        //TODO 入库
         txLogService.begin(tx.getXid());
 
     }

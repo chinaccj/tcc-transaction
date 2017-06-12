@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pre_product">
+  <resultMap id="productExt" type="productExt" >
+	<result property="xid" column="xid" jdbcType="VARCHAR"/>
+	<result property="productId" column="product_id" jdbcType="VARCHAR"/>
+	<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+	<result property="remaining" column="remaining" jdbcType="INTEGER"/>
+  </resultMap>
+
+	<delete id="deleteByXid" parameterType="String">
+		delete from pre_product where xid=#{xid}
+	</delete>
+    
+    <insert id="insert" parameterType="productExt">
+    	insert into pre_product
+    	 (product_id,xid, delta)
+    	 values
+    	 (#{productId},#{xid},#{delta})
+    </insert>
+
+	<select id="selectByXid" resultType="String">
+		select * from pre_product where xid=#{xid}
+	</select>
+</mapper>

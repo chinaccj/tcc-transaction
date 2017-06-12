@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pre_account">
+    <resultMap id="preAccount" type="preAccount">
+        <result property="xid" column="xid" jdbcType="VARCHAR"/>
+        <result property="accountId" column="account_id" jdbcType="VARCHAR"/>
+        <result property="toAccountId" column="to_account_id" jdbcType="VARCHAR"/>
+        <result property="operation" column="operation" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="delta" column="delta" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <delete id="deleteByXid" parameterType="preAccount">
+		delete from pre_account where xid=#{xid}
+	</delete>
+
+    <insert id="insert" parameterType="preAccount">
+    	insert into pre_account
+    	 (account_id,to_account_id,xid, operation,delta)
+    	 values
+    	 (#{accountId},#{toAccountId},#{xid},#{operation},#{delta})
+    </insert>
+
+    <insert id="insertWithoutToAccountId" parameterType="preAccount">
+		insert into pre_account
+		(account_id,xid, operation,delta)
+		values
+		(#{accountId},#{xid},#{operation},#{delta})
+	</insert>
+
+    <select id="selectByXid" resultType="String">
+		select * from pre_account where xid=#{xid}
+	</select>
+</mapper>

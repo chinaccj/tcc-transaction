@@ -3,24 +3,24 @@ package com.touna.tcc.core;
 /**
  * Created by chenchaojian on 17/5/28.
  */
-public class TCCCommitException extends RuntimeException {
+public class TccCommitException extends TccFrameworkException {
 
-    public TCCCommitException() {
+    public TccCommitException() {
         super();
     }
 
 
-    public TCCCommitException(String message) {
+    public TccCommitException(String message) {
         super(message);
     }
 
 
-    public TCCCommitException(String message, Throwable cause) {
+    public TccCommitException(String message, Throwable cause) {
         super(message, cause);
     }
 
 
-    public TCCCommitException(Throwable cause) {
+    public TccCommitException(Throwable cause) {
         super(cause);
     }
 }

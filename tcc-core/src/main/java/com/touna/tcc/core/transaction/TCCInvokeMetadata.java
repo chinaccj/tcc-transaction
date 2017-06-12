@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class TCCInvokeMetadata {
     /**
+     * xid
+     */
+    private String xid;
+    /**
      * child xid
      */
     private String cXid;
@@ -25,6 +29,8 @@ public class TCCInvokeMetadata {
     private Class[] paramsTypes;
 
     private Object[] paramValues;
+
+    private int index;
 
     public TCCInvokeMetadata() {
     }
@@ -75,5 +81,21 @@ public class TCCInvokeMetadata {
 
     public void setcXid(String cXid) {
         this.cXid = cXid;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getXid() {
+        return xid;
+    }
+
+    public void setXid(String xid) {
+        this.xid = xid;
     }
 }

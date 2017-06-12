@@ -9,18 +9,18 @@ public interface AccountService {
      * @param accountId
      * @param amount
      */
-    void pay(String uuid,String accountId,Float amount);
+    void pay(String xid,String accountId,Double amount);
 
-    void payCommit(String uuid, String accountId, Float amount);
+    void payCommit(String xid, String accountId);
 
 
-    void payRollback(String uuid, String accountId, Float amount);
+    void payRollback(String xid, String accountId);
 
 
     /**
-     * 充值
+     *
+     * @param uuid
      * @param accountId
-     * @param amount
      */
-    void deposit(String uuid,String accountId,Float amount);
+    void deposit(String xid,String uuid,String accountId);
 }

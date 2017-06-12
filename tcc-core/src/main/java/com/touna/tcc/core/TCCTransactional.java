@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
-public @interface TCCTransactional {
+public @interface TccTransactional {
+    int xidIndex() default 0;
 }

@@ -20,7 +20,7 @@ public interface TransactionManager {
     void rollback(TransactionInfo txInfo);
 
 
-    TransactionStatus getTransaction();
+    TransactionStatus getTransaction(String xid);
 
 //    TxLogService getTxLogService();
 //

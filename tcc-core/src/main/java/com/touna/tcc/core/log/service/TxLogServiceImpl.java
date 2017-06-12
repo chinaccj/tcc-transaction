@@ -4,6 +4,8 @@ import com.touna.tcc.core.log.dao.TxDao;
 import com.touna.tcc.core.log.dao.model.Tx;
 import com.touna.tcc.core.transaction.Participant;
 import com.touna.tcc.core.transaction.XaState;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -13,6 +15,7 @@ import java.util.Date;
 public class TxLogServiceImpl implements TxLogService {
     private TxDao txDao;
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void begin(String xid) {
         Tx tx = new Tx();
@@ -21,6 +24,7 @@ public class TxLogServiceImpl implements TxLogService {
         txDao.insert(tx);
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void trySuccess(String xid) {
         Tx tx = new Tx();
@@ -30,6 +34,7 @@ public class TxLogServiceImpl implements TxLogService {
         txDao.updateState(tx);
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void finish(String xid,long beginTimeMillis) {
         Tx tx = new Tx();
@@ -41,6 +46,7 @@ public class TxLogServiceImpl implements TxLogService {
         txDao.update(tx);
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void comfirmFail(String xid) {
         Tx tx = new Tx();
@@ -50,6 +56,7 @@ public class TxLogServiceImpl implements TxLogService {
         txDao.updateState(tx);
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void rollbackFail(String xid) {
         Tx tx = new Tx();

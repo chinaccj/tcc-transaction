@@ -3,24 +3,24 @@ package com.touna.tcc.core;
 /**
  * Created by chenchaojian on 17/5/31.
  */
-public class TCCLogException  extends RuntimeException {
+public class TccLogException extends TccFrameworkException {
 
-    public TCCLogException() {
+    public TccLogException() {
         super();
     }
 
 
-    public TCCLogException(String message) {
+    public TccLogException(String message) {
         super(message);
     }
 
 
-    public TCCLogException(String message, Throwable cause) {
+    public TccLogException(String message, Throwable cause) {
         super(message, cause);
     }
 
 
-    public TCCLogException(Throwable cause) {
+    public TccLogException(Throwable cause) {
         super(cause);
     }
 }

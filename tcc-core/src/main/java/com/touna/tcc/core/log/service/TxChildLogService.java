@@ -19,6 +19,9 @@ public interface TxChildLogService {
     void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod,
                           String rollbackMethod, Class[] paramsTypes, Object []paramValues);
 
+    void tryFail(int sequence ,String xid, String cXid, String clsName, String commitMethod,
+                    String rollbackMethod, Class[] paramsTypes, Object []paramValues);
+
     void finish(String xid,String cXid,long beginTimeMillis);
 
     void confirmFail(String xid,String cXid);

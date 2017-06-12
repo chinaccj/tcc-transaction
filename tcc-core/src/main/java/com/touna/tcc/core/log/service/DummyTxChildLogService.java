@@ -14,6 +14,11 @@ public class DummyTxChildLogService implements TxChildLogService{
     }
 
     @Override
+    public void tryFail(int sequence, String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+
+    }
+
+    @Override
     public void finish(String xid, String cXid, long beginTimeMillis) {
 
     }

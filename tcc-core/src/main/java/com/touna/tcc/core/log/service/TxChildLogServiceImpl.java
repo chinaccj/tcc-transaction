@@ -7,9 +7,12 @@ import com.touna.tcc.core.log.ClassWrapper;
 import com.touna.tcc.core.log.dao.TxChildDao;
 import com.touna.tcc.core.log.dao.model.TxChild;
 import com.touna.tcc.core.transaction.XaState;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.touna.tcc.core.TCCLogException;
+import com.touna.tcc.core.TccLogException;
 import com.touna.tcc.core.log.ObjectWrapper;
 import com.touna.tcc.core.log.Serializer;
 
@@ -21,12 +24,14 @@ public class TxChildLogServiceImpl implements TxChildLogService {
     private Serializer serializer;
     private TxChildDao txChildDao;
 
+
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod,
                       String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
 
         checkParams(xid, cXid, clsName, commitMethod, rollbackMethod, paramsTypes, paramValues);
-
+        TxChild txChild = null;
         try {
             byte[] bytes = serializer.serialize(new ObjectWrapper(paramValues));
             String strParamValues = new String(bytes, "UTF-8");
@@ -34,7 +39,7 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes));
             String strParamsType = new String(clssBytes,"UTF-8");
 
-            TxChild txChild = new TxChild();
+            txChild = new TxChild();
             txChild.setClsName(clsName);
             txChild.setCommitMethod(commitMethod);
             txChild.setcXid(cXid);
@@ -48,10 +53,51 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             txChildDao.insert(txChild);
 
 
-        } catch (UnsupportedEncodingException e) {
-            throw new TCCLogException(e.getMessage(), e);
+        } catch (DuplicateKeyException ex){
+            //this scene merely occur.only occur while consumer retry (dubbo use FailoverCluster handle timeout exception)
+            txChildDao.updateState(txChild);
+
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new TccLogException(e.getMessage(), e);
         }
 
+    }
+
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void tryFail(int sequence, String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+        checkParams(xid, cXid, clsName, commitMethod, rollbackMethod, paramsTypes, paramValues);
+
+        TxChild txChild = null;
+        try {
+            byte[] bytes = serializer.serialize(new ObjectWrapper(paramValues));
+            String strParamValues = new String(bytes, "UTF-8");
+
+            byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes));
+            String strParamsType = new String(clssBytes,"UTF-8");
+
+            txChild = new TxChild();
+            txChild.setClsName(clsName);
+            txChild.setCommitMethod(commitMethod);
+            txChild.setcXid(cXid);
+            txChild.setParamesTypes(strParamsType);
+            txChild.setParamesValues(strParamValues);
+            txChild.setRollbackMethod(rollbackMethod);
+            txChild.setStatus(XaState.TRY_FAIL.getState());
+            txChild.setXid(xid);
+            txChild.setSequence(sequence);
+
+            txChildDao.insert(txChild);
+
+
+        } catch (DuplicateKeyException ex){
+            //this scene merely occur.only occur while consumer retry (dubbo use FailoverCluster handle timeout exception)
+            txChildDao.updateState(txChild);
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new TccLogException(e.getMessage(), e);
+        }
     }
 
     private void checkParams(String xid, String cXid, String clsName, String commitMethod,
@@ -65,6 +111,7 @@ public class TxChildLogServiceImpl implements TxChildLogService {
         Assert.notNull(paramValues, "paramValues can not be null");
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void finish(String xid, String cXid,long beginTimeMillis) {
 
@@ -78,6 +125,7 @@ public class TxChildLogServiceImpl implements TxChildLogService {
         txChildDao.update(tx);
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void confirmFail(String xid, String cXid) {
         TxChild tx = new TxChild();
@@ -88,6 +136,7 @@ public class TxChildLogServiceImpl implements TxChildLogService {
         txChildDao.updateState(tx);
     }
 
+    @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void rollbackFail(String xid, String cXid) {
         TxChild tx = new TxChild();

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- <settings> -->
+    <!-- 这个配置使全局的映射器启用或禁用缓存 -->
+    <!-- <setting name="cacheEnabled" value="true" /> -->
+    <!-- 允许 JDBC 支持生成的键。需要适合的驱动。如果设置为 true 则这个设置强制生成的键被使用，尽管一些驱动拒绝兼容但仍然有效（比如 Derby） -->
+    <!-- <setting name="useGeneratedKeys" value="true" /> -->
+    <!-- 配置默认的执行器。SIMPLE 执行器没有什么特别之处。REUSE 执行器重用预处理语句。BATCH 执行器重用语句和批量更新 -->
+    <!-- <setting name="defaultExecutorType" value="REUSE" /> -->
+    <!-- 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。 -->
+    <!-- <setting name="lazyLoadingEnabled" value="true" /> -->
+    <!-- 设置超时时间，它决定驱动等待一个数据库响应的时间。 -->
+    <!-- <setting name="defaultStatementTimeout" value="25000" /> -->
+    <!-- </settings> -->
+
+    <!-- 别名配置 -->
+    <!--
+
+     -->
+    <typeAliases>
+        <!--
+          通过package, 可以直接指定package的名字， mybatis会自动扫描你指定包下面的javabean,
+          并且默认设置一个别名，默认的名字为： javabean 的首字母小写的非限定类名来作为它的别名。
+          也可在javabean 加上注解@Alias 来自定义别名， 例如： @Alias(user)
+          <package name="com.dy.entity"/>
+           -->
+        <typeAlias alias="productExt" type="com.touna.tcc.demo.itemcenter.dao.model.ProductExt"/>
+
+
+
+    </typeAliases>
+    <!-- 指定映射器路径 -->
+    <mappers>
+        <mapper resource="config/sqlmap/product.xml" />
+        <mapper resource="config/sqlmap/pre_product.xml" />
+
+    </mappers>
+
+</configuration>

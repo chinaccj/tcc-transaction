@@ -19,6 +19,8 @@
     <c3p0.version>0.9.1.2</c3p0.version>
     <common-beans.version>1.0.2-SNAPSHOT</common-beans.version>
     <demo-pay.facade.version>1.0-SNAPSHOT</demo-pay.facade.version>
+    <demo-itemcenter.facade.version>1.0-SNAPSHOT</demo-itemcenter.facade.version>
+
 
   </properties>
 
@@ -37,6 +39,11 @@
       <groupId>com.touna</groupId>
       <artifactId>demo-pay.facade</artifactId>
       <version>${demo-pay.facade.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.touna</groupId>
+      <artifactId>demo-itemcenter.facade</artifactId>
+      <version>${demo-itemcenter.facade.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -95,11 +102,6 @@
       <version>1.6.11</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${spring3.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>

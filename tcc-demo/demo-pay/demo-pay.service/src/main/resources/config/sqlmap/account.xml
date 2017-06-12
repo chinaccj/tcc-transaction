@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="account">
+    <resultMap id="account" type="account">
+        <result property="accountId" column="account_id" jdbcType="VARCHAR"/>
+        <!--<result property="xid" column="xid" jdbcType="VARCHAR"/>-->
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="balance" column="balance" jdbcType="DOUBLE"/>
+    </resultMap>
+
+
+    <update id="pay" parameterType="account">
+      update account set balance=balance-#{delta} where account_id=#{accountId}
+    </update>
+
+    <select id="selectById" resultType="account">
+      select * from account where account_id=#{accountId}
+    </select>
+</mapper>

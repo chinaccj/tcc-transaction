@@ -4,45 +4,51 @@ package com.touna.tcc.core.interceptor;
  * Created by chenchaojian on 17/5/10.
  */
 
-import com.touna.tcc.core.TwoPhaseBusinessAction;
-import com.touna.tcc.core.log.service.TxLogService;
-import com.touna.tcc.core.transaction.Transaction;
-import com.touna.tcc.core.transaction.TransactionManager;
-import com.touna.tcc.core.transaction.TransactionStatus;
-import com.touna.tcc.core.transaction.TransactionSynchronizationManager;
+import java.lang.reflect.Method;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
+import com.touna.tcc.core.IllegalOperationException;
+import com.touna.tcc.core.TccFrameworkException;
+import com.touna.tcc.core.TccTransactional;
+import com.touna.tcc.core.log.service.TxLogService;
+import com.touna.tcc.core.transaction.Transaction;
+import com.touna.tcc.core.transaction.TransactionManager;
+import com.touna.tcc.core.transaction.TransactionStatus;
+import com.touna.tcc.core.transaction.TransactionSynchronizationManager;
 
 @Aspect
-public class TCCTransactionInterceptor implements BeanFactoryAware, InitializingBean {
-    private static final Logger logger = LoggerFactory.getLogger(TCCTransactionInterceptor.class);
+public class TccTransactionInterceptor implements BeanFactoryAware, InitializingBean {
+    private static final Logger logger = LoggerFactory.getLogger(TccTransactionInterceptor.class);
 
     private BeanFactory beanFactory;
 
-    private  String transactionManagerBeanName;// = "tccTransaction";
+    private String             transactionManagerBeanName;// = "tccTransaction";
     private TransactionManager transactionManager = null;
 
     private TxLogService txLogService;
 
-    @Around("@annotation(com.touna.tcc.core.TCCTransactional)")
-    public Object around(ProceedingJoinPoint point) throws Throwable {
+    @Around("@annotation(com.touna.tcc.core.TccTransactional)")
+    public Object around(ProceedingJoinPoint pjp) throws Throwable {
 
         Object retVal = null;
         TransactionManager tm = determineTransactionManager();
 
-        TransactionInfo txInfo = createTransactionIfNecessary(tm);
+        //fetch xid from invoke parameter
+        String xid = fetchXid(pjp);
+
+        TransactionInfo txInfo = createTransactionIfNecessary(xid, tm);
 
         try {
 
-            retVal = point.proceed();
+            retVal = pjp.proceed();
 
             //try success log
             logTrySuccess();
@@ -52,12 +58,12 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
 
             //
         } catch (Throwable ex) {
-            logger.error(ex.toString(),ex);
+            logger.error(ex.toString(), ex);
 
             //回滚
             txInfo.getTransactionManager().rollback(txInfo);
             throw ex;
-        }finally {
+        } finally {
             //clear thread local
             cleanupTransactionInfo(txInfo);
         }
@@ -65,39 +71,62 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
         return retVal;
     }
 
-    protected void logTrySuccess(){
+    protected String fetchXid(ProceedingJoinPoint pjp) {
+        try {
+            String methodName = pjp.getSignature().getName();
+            Class<?> classTarget = pjp.getTarget().getClass();
+            Class<?>[] parameterTypes = ((MethodSignature) pjp.getSignature()).getParameterTypes();
+            Method method = classTarget.getMethod(methodName, parameterTypes);
+            TccTransactional tccAnnotation = method.getAnnotation(TccTransactional.class);
+            int index = tccAnnotation.xidIndex();
+            Object[] args = pjp.getArgs();
+            Object obj = args[index];
+
+            return (String) obj;
+
+        } catch (ClassCastException ex) {
+            throw new IllegalOperationException(
+                "illegal use of tcc framework. method with @TCCTransactional must have a param with xid(String type)");
+
+        } catch (Throwable ex) {
+            throw new TccFrameworkException(ex.getMessage(), ex);
+        }
+    }
+
+    protected void logTrySuccess() {
         Transaction tx = TransactionSynchronizationManager.getResource();
         String xid = tx.getXid();
 
         txLogService.trySuccess(xid);
 
     }
-    protected void cleanupTransactionInfo(TransactionInfo txInfo){
-        if(txInfo != null) {
+
+    protected void cleanupTransactionInfo(TransactionInfo txInfo) {
+        if (txInfo != null) {
             if (txInfo.getTransactionStatus().isNewTransaction()) {//else 非最外层方法，不做处理
                 TransactionSynchronizationManager.clear();
             }
         }
     }
 
-    protected TransactionInfo createTransactionIfNecessary(TransactionManager tm){
-        TransactionStatus status = tm.getTransaction();
-        return new TransactionInfo(status,tm);
+    protected TransactionInfo createTransactionIfNecessary(String xid, TransactionManager tm) {
+        TransactionStatus status = tm.getTransaction(xid);
+        return new TransactionInfo(status, tm);
     }
 
-    private TransactionManager determineTransactionManager(){
-        if(transactionManager != null){
+    private TransactionManager determineTransactionManager() {
+        if (transactionManager != null) {
             return this.transactionManager;
-        }
-        else if (this.transactionManagerBeanName != null) {
-            return this.beanFactory.getBean(this.transactionManagerBeanName, TransactionManager.class);
-        }
-        else if (this.beanFactory instanceof ListableBeanFactory) {
-            return BeanFactoryUtils.beanOfTypeIncludingAncestors(((ListableBeanFactory) this.beanFactory), TransactionManager.class);
-        }
-        else {
+        } else if (this.transactionManagerBeanName != null) {
+            return this.beanFactory.getBean(this.transactionManagerBeanName,
+                TransactionManager.class);
+        } else if (this.beanFactory instanceof ListableBeanFactory) {
+            return BeanFactoryUtils.beanOfTypeIncludingAncestors(
+                ((ListableBeanFactory) this.beanFactory), TransactionManager.class);
+        } else {
             throw new IllegalStateException(
-                    "Cannot retrieve PlatformTransactionManager beans from non-listable BeanFactory: " + this.beanFactory);
+                "Cannot retrieve PlatformTransactionManager beans from non-listable BeanFactory: "
+                                            + this.beanFactory);
         }
     }
 
@@ -127,8 +156,3 @@ public class TCCTransactionInterceptor implements BeanFactoryAware, Initializing
         this.txLogService = txLogService;
     }
 }
-
-
-
-
-

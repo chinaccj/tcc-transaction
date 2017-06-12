@@ -1,5 +1,7 @@
 package com.touna.tcc.demo.pay.facade.intf;
 
+import com.touna.tcc.core.Attachment;
+import com.touna.tcc.core.TccContext;
 import com.touna.tcc.core.TwoPhaseBusinessAction;
 
 /**
@@ -10,18 +12,18 @@ public interface AccountFacade {
 
 
     /**
-     * 支付
+     * 支付预处理
      * @param accountId
      * @param amount
      */
     @TwoPhaseBusinessAction(commitMethod="payCommit",rollbackMethod="payRollback")
-    void pay(String uuid,String accountId,Float amount);
+    void pay(String xid,@Attachment(key="accountId") String accountId,Double amount);
 
 
-    void payCommit(String uuid,String accountId,Float amount);
+    void payCommit(String xid,TccContext tccContext);
 
 
-    void payRollback(String uuid,String accountId,Float amount);
+    void payRollback(String xid,TccContext tccContext);
 
 
 
@@ -30,5 +32,5 @@ public interface AccountFacade {
      * @param accountId
      * @param amount
      */
-    void deposit(String uuid,String accountId,Float amount);
+    void deposit(String xid,String uuid,String accountId,Float amount);
 }

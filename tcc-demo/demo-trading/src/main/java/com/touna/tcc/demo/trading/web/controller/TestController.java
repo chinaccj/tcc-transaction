@@ -2,6 +2,7 @@ package com.touna.tcc.demo.trading.web.controller;
 
 import com.touna.tcc.demo.trading.service.OrderService;
 import com.touna.tcc.demo.trading.web.bean.Response;
+import com.touna.tcc.demo.trading.web.util.XidGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +24,8 @@ public class TestController {
     Response getShopInJSON() {
         try {
 
-            orderService.placeOrder("1","1",11f);
+            String xid = XidGenerator.getNewXid("TRD");
+            orderService.placeOrder(xid,"1","1",11.00);
 
             return new Response("hello world!!");
 

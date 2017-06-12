@@ -3,24 +3,24 @@ package com.touna.tcc.core;
 /**
  * Created by chenchaojian on 17/5/28.
  */
-public class TCCRollbackException extends RuntimeException {
+public class TccRollbackException extends TccFrameworkException {
 
-    public TCCRollbackException() {
+    public TccRollbackException() {
         super();
     }
 
 
-    public TCCRollbackException(String message) {
+    public TccRollbackException(String message) {
         super(message);
     }
 
 
-    public TCCRollbackException(String message, Throwable cause) {
+    public TccRollbackException(String message, Throwable cause) {
         super(message, cause);
     }
 
 
-    public TCCRollbackException(Throwable cause) {
+    public TccRollbackException(Throwable cause) {
         super(cause);
     }
 }

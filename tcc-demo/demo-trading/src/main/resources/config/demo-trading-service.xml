@@ -45,6 +45,10 @@
     <dubbo:reference id="accountFacade" interface=" com.touna.tcc.demo.pay.facade.intf.AccountFacade" loadbalance="roundrobin">
     </dubbo:reference>
 
+    <dubbo:reference id="itemFacade" interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" loadbalance="roundrobin">
+    </dubbo:reference>
+
+
     <import resource="classpath:config/demo-trading-tcc.xml"/>
 
 </beans>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false">
+
+
+    <context:component-scan base-package="com.touna.tcc.demo.itemcenter" />
+
+
+    <bean id="dataSource"
+          class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${itemcenter.jdbc.driver}"/>
+        <property name="jdbcUrl" value="${itemcenter.jdbc.jdbcUrl}"/>
+        <property name="user" value="${itemcenter.jdbc.username}"/>
+        <property name="password" value="${itemcenter.jdbc.password}"/>
+        <property name="minPoolSize" value="${itemcenter.jdbc.minPoolSize}"/>
+        <property name="maxPoolSize" value="${itemcenter.jdbc.maxPoolSize}"/>
+        <property name="initialPoolSize" value="${itemcenter.jdbc.initialPoolSize}"/>
+        <property name="maxIdleTime" value="${itemcenter.jdbc.maxIdleTime}"/>
+        <property name="acquireIncrement" value="${itemcenter.jdbc.acquireIncrement}"/>
+        <property name="checkoutTimeout" value="${itemcenter.jdbc.acquireCheckoutTimeout}"/>
+    </bean>
+    <!-- transaction support-->
+    <!-- PlatformTransactionMnager -->
+    <bean id="itemcenterTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="itemcenterTransactionManager"/>
+    <context:annotation-config/>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:config/demo-itemcenter-sqlmap.xml"/>
+    </bean>
+
+    <bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+
+    <bean id="itemDao" class="com.touna.tcc.demo.itemcenter.dao.ItemDaoImpl">
+        <property name="sqlSession" ref="sessionTemplate"/>
+    </bean>
+
+    <!--<bean id="txChildDao" class="com.touna.tcc.core.log.dao.TxChildDaoImpl">-->
+        <!--<property name="sqlSession" ref="sessionTemplate"/>-->
+    <!--</bean>-->
+
+</beans>

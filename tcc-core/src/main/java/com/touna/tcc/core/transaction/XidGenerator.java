@@ -15,8 +15,8 @@ public class XidGenerator {
      * 生产子事务的 事务id
      * @return
      */
-    public static String newCXid(){
-        return UUID.randomUUID().toString();
+    public static String newCXid(String xid,int index){
+        return xid+"_"+index;
     }
 
 }

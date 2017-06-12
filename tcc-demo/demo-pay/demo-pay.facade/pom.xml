@@ -9,7 +9,7 @@
   <groupId>com.touna</groupId>
   <artifactId>demo-pay.facade</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   <name>demo-pay.facade</name>
   <dependencies>
     <dependency>

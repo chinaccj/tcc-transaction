@@ -1,5 +1,6 @@
 package com.touna.tcc.demo.pay.facade.impl;
 
+import com.touna.tcc.core.TccContext;
 import com.touna.tcc.demo.pay.facade.intf.AccountFacade;
 import com.touna.tcc.demo.pay.service.intf.AccountService;
 
@@ -13,28 +14,28 @@ public class AccountFacadeImpl implements AccountFacade {
     protected AccountService accountService;
 
     @Override
-    public void pay(String uuid,String accountId, Float amount) {
-        accountService.pay(uuid,accountId,amount);
+    public void pay(String xid,String accountId, Double amount) {
+        accountService.pay(xid,accountId,amount);
 //        if(true){
 //            throw new RuntimeException("xx");
 //        }
     }
 
     @Override
-    public void payCommit(String uuid, String accountId, Float amount) {
-        if(true){
-            throw new RuntimeException("xx");
-        }
-        accountService.payCommit(uuid,accountId,amount);
+    public void payCommit(String xid,TccContext tccContext) {
+        String accountId = (String)tccContext.getAttachment("accountId");
+        System.out.println("test tcc Context accountId = "+accountId);
+        accountService.payCommit(xid,accountId);
     }
 
     @Override
-    public void payRollback(String uuid, String accountId, Float amount) {
-        accountService.payRollback(uuid,accountId,amount);
+    public void payRollback(String xid,TccContext tccContext) {
+        String accountId = (String)tccContext.getAttachment("accountId");
+        accountService.payRollback(xid,accountId);
     }
 
     @Override
-    public void deposit(String uuid,String accountId, Float amount) {
-        accountService.deposit(uuid,accountId,amount);
+    public void deposit(String xid,String uuid,String accountId, Float amount) {
+        accountService.deposit(xid,uuid,accountId);
     }
 }

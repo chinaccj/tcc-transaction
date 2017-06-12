@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false">
+
+
+    <!--<context:component-scan base-package="com.touna.tcc.demo.pay" />-->
+
+
+    <bean id="dataSource"
+          class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${pay.jdbc.driver}"/>
+        <property name="jdbcUrl" value="${pay.jdbc.jdbcUrl}"/>
+        <property name="user" value="${pay.jdbc.username}"/>
+        <property name="password" value="${pay.jdbc.password}"/>
+        <property name="minPoolSize" value="${pay.jdbc.minPoolSize}"/>
+        <property name="maxPoolSize" value="${pay.jdbc.maxPoolSize}"/>
+        <property name="initialPoolSize" value="${pay.jdbc.initialPoolSize}"/>
+        <property name="maxIdleTime" value="${pay.jdbc.maxIdleTime}"/>
+        <property name="acquireIncrement" value="${pay.jdbc.acquireIncrement}"/>
+        <property name="checkoutTimeout" value="${pay.jdbc.acquireCheckoutTimeout}"/>
+    </bean>
+    <!-- transaction support-->
+    <!-- PlatformTransactionMnager -->
+    <bean id="payTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="payTransactionManager"/>
+    <context:annotation-config/>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:config/demo-pay-sqlmap.xml"/>
+    </bean>
+
+    <bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+
+    <bean id="accountDao" class="com.touna.tcc.demo.pay.dao.AccountDaoImpl">
+        <property name="sqlSession" ref="sessionTemplate"/>
+    </bean>
+
+</beans>
