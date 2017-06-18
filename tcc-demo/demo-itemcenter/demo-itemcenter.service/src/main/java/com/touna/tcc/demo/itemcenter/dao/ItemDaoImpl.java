@@ -51,9 +51,15 @@ public class ItemDaoImpl implements ItemDao {
 
         int numAffected = sqlSession.update("product.shipping", product);
         //TODO should handle numAffected not equal 1 exception
+        if(numAffected != 1){
+            throw new RuntimeException("sell commit fail,not update product collectly");
+        }
 
-        int numDeleted = sqlSession.delete("pre_product.deleteByXid", product);
+        int numDeleted = sqlSession.delete("pre_product.deleteByXid", xid);
         //TODO should handle numDeleted not equal 1 exception
+        if(numDeleted != 1){
+            throw new RuntimeException("sell commit fail,not delete pre_product collectly");
+        }
 
 
     }

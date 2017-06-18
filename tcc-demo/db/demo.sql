@@ -8,13 +8,12 @@ CREATE TABLE `product` (
   KEY `idx_create_time` (`create_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '商品表';
 
-CREATE TABLE `pre_product_shipping` (
+CREATE TABLE `pre_product` (
   `xid` varchar(40) NOT NULL COMMENT '事务id',
   `product_id` varchar(40) NOT NULL COMMENT '',
   `create_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `delta` int DEFAULT 0 COMMENT '出货数量',
-  PRIMARY KEY (`product_id`),
-  UNIQUE KEY `idx_xid` (`xid`) USING BTREE
+  PRIMARY KEY (`xid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '商品库存预处理表';
 
 
@@ -33,11 +32,11 @@ CREATE TABLE `pre_account` (
   `operation` int DEFAULT 0 COMMENT '操作类型 0 消费  1充值 2转账',
   `delta` DECIMAL(12,2) DEFAULT 0 COMMENT '金额',
   `create_time` DATETIME not null DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`account_id`),
+  PRIMARY KEY (`xid`),
   KEY `idx_create_time` (`create_time`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '账号预处理表';
 
 
 -- init table
 insert into account(account_id,balance) VALUES ("1",100000.00);
-insert into product(product_id, remaining) VALUES ("1",1000);
+insert into product(product_id, remaining) VALUES ("1",100000);

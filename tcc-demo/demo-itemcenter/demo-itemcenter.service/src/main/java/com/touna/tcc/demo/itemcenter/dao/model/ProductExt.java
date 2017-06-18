@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * Created by chenchaojian on 17/6/9.
- * 兼容 product 和  pre_product_shipping
+ * 兼容 product 和  pre_product
  */
 public class ProductExt {
     private String productId;
@@ -15,6 +15,9 @@ public class ProductExt {
      * 出货／进货量
      */
     private Integer delta;
+
+    public ProductExt() {
+    }
 
     public String getProductId() {
         return productId;

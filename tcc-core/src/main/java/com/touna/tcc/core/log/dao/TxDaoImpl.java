@@ -1,6 +1,7 @@
 package com.touna.tcc.core.log.dao;
 
 import com.touna.tcc.core.log.dao.model.Tx;
+import com.touna.tcc.core.transaction.XaState;
 import org.apache.ibatis.session.SqlSession;
 
 /**
@@ -22,6 +23,17 @@ public class TxDaoImpl implements TxDao{
     @Override
     public int updateState(Tx tx) {
         return sqlSession.update("tcc_tx.updateState",tx);
+    }
+
+    @Override
+    public Tx getTxByXid(String xid) {
+        return sqlSession.selectOne("tcc_tx.selectByXid", xid);
+    }
+
+    @Override
+    public XaState getStateByXid(String xid) {
+        int status = sqlSession.selectOne("tcc_tx.selectStatusByXid", xid);
+        return XaState.valueOf(status);
     }
 
 

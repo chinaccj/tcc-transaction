@@ -13,7 +13,7 @@
         <result property="delta" column="delta" jdbcType="DOUBLE"/>
     </resultMap>
 
-    <delete id="deleteByXid" parameterType="preAccount">
+    <delete id="deleteByXid" parameterType="String">
 		delete from pre_account where xid=#{xid}
 	</delete>
 
@@ -31,7 +31,7 @@
 		(#{accountId},#{xid},#{operation},#{delta})
 	</insert>
 
-    <select id="selectByXid" resultType="String">
+    <select id="selectByXid" parameterType="String" resultMap="preAccount">
 		select * from pre_account where xid=#{xid}
 	</select>
 </mapper>

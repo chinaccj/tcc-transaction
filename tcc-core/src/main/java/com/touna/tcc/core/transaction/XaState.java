@@ -45,4 +45,15 @@ public enum  XaState {
     public String getDesc() {
         return desc;
     }
+
+    public static XaState valueOf(int state){
+        XaState[] vs = values();
+        for(XaState st:vs){
+            if(st.getState() == state){
+                return st;
+            }
+        }
+
+        return null;
+    }
 }

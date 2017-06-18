@@ -1,11 +1,19 @@
 package com.touna.tcc.demo.trading.service;
 
-import com.touna.tcc.demo.trading.base.BaseTest;
-import com.touna.tcc.demo.trading.web.util.XidGenerator;
-import org.junit.Test;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.touna.tcc.demo.trading.base.BaseTest;
+import com.touna.tcc.demo.trading.web.util.XidGenerator;
 
 /**
  * Created by chenchaojian on 17/5/15.
@@ -17,10 +25,12 @@ public class OrderServiceTest extends BaseTest {
 
     @Resource
     protected OrderService orderService;
+
     @Test
     public void testPlaceOrder(){
-
         String xid = XidGenerator.getNewXid("OD");
-        orderService.placeOrder(xid,"1","1",11.00);
+
+        orderService.placeOrder(xid, "1", "1", 1.00);
     }
+
 }

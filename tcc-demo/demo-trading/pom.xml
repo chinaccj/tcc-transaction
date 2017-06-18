@@ -20,8 +20,6 @@
     <common-beans.version>1.0.2-SNAPSHOT</common-beans.version>
     <demo-pay.facade.version>1.0-SNAPSHOT</demo-pay.facade.version>
     <demo-itemcenter.facade.version>1.0-SNAPSHOT</demo-itemcenter.facade.version>
-
-
   </properties>
 
   <dependencies>
@@ -63,7 +61,7 @@
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.1.0</version>
+      <version>3.2.8</version>
     </dependency>
     <dependency>
       <groupId>org.mybatis</groupId>

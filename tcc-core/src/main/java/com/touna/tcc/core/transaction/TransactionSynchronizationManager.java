@@ -83,5 +83,6 @@ public class TransactionSynchronizationManager {
     public static void clear(){
         transactionHolder.remove();
         invokeMetadataHolder.remove();
+        childTxIndexHolder.remove();
     }
 }

@@ -8,7 +8,7 @@
 	<result property="xid" column="xid" jdbcType="VARCHAR"/>
 	<result property="productId" column="product_id" jdbcType="VARCHAR"/>
 	<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
-	<result property="remaining" column="remaining" jdbcType="INTEGER"/>
+	<result property="delta" column="delta" jdbcType="INTEGER"/>
   </resultMap>
 
 	<delete id="deleteByXid" parameterType="String">
@@ -22,7 +22,7 @@
     	 (#{productId},#{xid},#{delta})
     </insert>
 
-	<select id="selectByXid" resultType="String">
-		select * from pre_product where xid=#{xid}
+	<select id="selectByXid" parameterType="String" resultMap="productExt">
+		select xid,product_id,create_time,delta from pre_product where xid=#{xid}
 	</select>
 </mapper>

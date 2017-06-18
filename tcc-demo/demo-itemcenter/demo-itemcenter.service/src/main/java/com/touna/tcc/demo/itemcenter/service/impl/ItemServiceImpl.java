@@ -30,14 +30,12 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(value="itemcenterTransactionManager")
     @Override
     public void sellCommit(String xid, TccContext tccContext) {
-//        System.out.println("sellCommit "+xid);
         itemDao.sellCommit(xid);
     }
 
     @Transactional(value="itemcenterTransactionManager")
     @Override
     public void sellRollback(String xid, TccContext tccContext) {
-//        System.out.println("sellRollback "+xid);
         itemDao.sellRollback(xid);
     }
 

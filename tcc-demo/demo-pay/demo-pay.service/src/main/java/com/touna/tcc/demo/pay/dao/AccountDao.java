@@ -1,5 +1,6 @@
 package com.touna.tcc.demo.pay.dao;
 
+import com.touna.tcc.demo.pay.dao.model.Account;
 import com.touna.tcc.demo.pay.dao.model.PreAccount;
 
 /**
@@ -7,10 +8,14 @@ import com.touna.tcc.demo.pay.dao.model.PreAccount;
  */
 public interface AccountDao {
 
-    void prePay(PreAccount preAccount);
+    void insertWithoutToAccountId(PreAccount preAccount);
 
-    void payCommit(String xid);
+    Account selectAccountById(String accountId);
 
-    void payRollback(String xid);
+    PreAccount selectPreAccountByXid(String xid);
 
+
+    int updateAccount(Account account);
+
+    int deletePreAccountByXid(String xid);
 }

@@ -1,74 +1,0 @@
-[INFO] Scanning for projects...
-[WARNING] 
-[WARNING] Some problems were encountered while building the effective model for com.touna:demo-trading:war:1.0-SNAPSHOT
-[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: org.springframework:spring-aop:jar -> duplicate declaration of version ${spring3.version} @ line 110, column 17
-[WARNING] 
-[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
-[WARNING] 
-[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
-[WARNING] 
-[INFO]                                                                         
-[INFO] ------------------------------------------------------------------------
-[INFO] Building demo-trading 1.0-SNAPSHOT
-[INFO] ------------------------------------------------------------------------
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/tcc-dubbo/1.0-SNAPSHOT/maven-metadata.xml
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/tcc-transaction/1.0-SNAPSHOT/maven-metadata.xml
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/tcc-core/1.0-SNAPSHOT/maven-metadata.xml
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/net/logstash/logback/logstash-logback-encoder/1.2/logstash-logback-encoder-1.2.pom
-Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/net/logstash/logback/logstash-logback-encoder/1.2/logstash-logback-encoder-1.2.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/fasterxml/jackson/core/jackson-databind/2.2.0/jackson-databind-2.2.0.pom
-Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/com/fasterxml/jackson/core/jackson-databind/2.2.0/jackson-databind-2.2.0.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/aspectj/aspectjrt/1.6.11/aspectjrt-1.6.11.pom
-Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/aspectj/aspectjrt/1.6.11/aspectjrt-1.6.11.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/alibaba/dubbo/2.5.4-SNAPSHOT/maven-metadata.xml
-980/980 B               Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/com/alibaba/dubbo/2.5.4-SNAPSHOT/maven-metadata.xml (980 B at 29.9 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/alibaba/dubbo-parent/2.5.4-SNAPSHOT/maven-metadata.xml
-600/600 B               Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/com/alibaba/dubbo-parent/2.5.4-SNAPSHOT/maven-metadata.xml (600 B at 27.9 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/demo-pay.facade/1.0-SNAPSHOT/maven-metadata.xml
-            Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/demo-pay/1.0-SNAPSHOT/maven-metadata.xml
-            Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/tcc-demo/1.0-SNAPSHOT/maven-metadata.xml
-            Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/demo-financial.facade/1.0-SNAPSHOT/maven-metadata.xml
-            Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/demo-financial.facade/1.0-SNAPSHOT/demo-financial.facade-1.0-SNAPSHOT.pom
-            [WARNING] The POM for com.touna:demo-financial.facade:jar:1.0-SNAPSHOT is missing, no dependency information available
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/asm/asm-all/3.1/asm-all-3.1.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/asm/asm-all/3.1/asm-all-3.1.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/dbunit/dbunit/2.4.3/dbunit-2.4.3.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/dbunit/dbunit/2.4.3/dbunit-2.4.3.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/fitnesse/fitnesse/20140418/fitnesse-20140418.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/fitnesse/fitnesse/20140418/fitnesse-20140418.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/htmlparser/htmlparser/2.1/htmlparser-2.1.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/htmlparser/htmlparser/2.1/htmlparser-2.1.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/htmlparser/HTMLParserProject/2.1/HTMLParserProject-2.1.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/htmlparser/HTMLParserProject/2.1/HTMLParserProject-2.1.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/htmlparser/htmllexer/2.1/htmllexer-2.1.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/htmlparser/htmllexer/2.1/htmllexer-2.1.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/json/json/20140107/json-20140107.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/json/json/20140107/json-20140107.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/googlecode/java-diff-utils/diffutils/1.2.1/diffutils-1.2.1.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/com/googlecode/java-diff-utils/diffutils/1.2.1/diffutils-1.2.1.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/eclipse/jgit/org.eclipse.jgit/2.3.1.201302201838-r/org.eclipse.jgit-2.3.1.201302201838-r.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/eclipse/jgit/org.eclipse.jgit/2.3.1.201302201838-r/org.eclipse.jgit-2.3.1.201302201838-r.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/eclipse/jgit/org.eclipse.jgit-parent/2.3.1.201302201838-r/org.eclipse.jgit-parent-2.3.1.201302201838-r.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/eclipse/jgit/org.eclipse.jgit-parent/2.3.1.201302201838-r/org.eclipse.jgit-parent-2.3.1.201302201838-r.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/jcraft/jsch/0.1.46/jsch-0.1.46.pom
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/com/jcraft/jsch/0.1.46/jsch-0.1.46.pom (0 B at 0.0 KB/sec)
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/demo-pay.facade/1.0-SNAPSHOT/demo-pay.facade-1.0-SNAPSHOT.jar
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/demo-financial.facade/1.0-SNAPSHOT/demo-financial.facade-1.0-SNAPSHOT.jar
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/org/aspectj/aspectjrt/1.6.11/aspectjrt-1.6.11.jar
-Downloading: http://10.0.4.70:7080/nexus/content/groups/public/net/logstash/logback/logstash-logback-encoder/1.2/logstash-logback-encoder-1.2.jar
-                                    Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/net/logstash/logback/logstash-logback-encoder/1.2/logstash-logback-encoder-1.2.jar (0 B at 0.0 KB/sec)
-            Downloaded: http://10.0.4.70:7080/nexus/content/groups/public/org/aspectj/aspectjrt/1.6.11/aspectjrt-1.6.11.jar (0 B at 0.0 KB/sec)
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 5.001 s
-[INFO] Finished at: 2017-06-08T15:48:54+08:00
-[INFO] Final Memory: 10M/156M
-[INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal on project demo-trading: Could not resolve dependencies for project com.touna:demo-trading:war:1.0-SNAPSHOT: The following artifacts could not be resolved: com.touna:demo-pay.facade:jar:1.0-SNAPSHOT, com.touna:demo-financial.facade:jar:1.0-SNAPSHOT: Could not find artifact com.touna:demo-pay.facade:jar:1.0-SNAPSHOT in nexus-mirror (http://10.0.4.70:7080/nexus/content/groups/public/) -> [Help 1]
-[ERROR] 
-[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
-[ERROR] Re-run Maven using the -X switch to enable full debug logging.
-[ERROR] 
-[ERROR] For more information about the errors and possible solutions, please read the following articles:
-[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException

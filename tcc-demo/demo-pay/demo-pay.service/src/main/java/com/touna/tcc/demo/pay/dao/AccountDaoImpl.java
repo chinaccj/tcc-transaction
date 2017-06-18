@@ -16,8 +16,9 @@ public class AccountDaoImpl implements AccountDao {
 
     private SqlSession sqlSession;
 
+
     @Override
-    public void prePay(PreAccount preAccount) {
+    public void insertWithoutToAccountId(PreAccount preAccount) {
         try {
 
             //data check
@@ -29,33 +30,32 @@ public class AccountDaoImpl implements AccountDao {
         } catch (DuplicateKeyException ex) {//幂等性校验 该预处理已经提交过.忽略这种异常
             logger.warn("pre account had done before " + ex.getMessage(), ex);
         }
+    }
 
+
+    @Override
+    public PreAccount selectPreAccountByXid(String xid) {
+        return  sqlSession.selectOne("pre_account.selectByXid", xid);
     }
 
     @Override
-    public void payCommit(String xid) {
-        PreAccount param = new PreAccount();
-        param.setXid(xid);
-
-        PreAccount preAccount = sqlSession.selectOne("pre_account.selectByXid", param);
-        if (preAccount == null) {
-            //幂等性操作。
-            return;
-        }
-
-        Account account = new Account();
-        account.setAccountId(preAccount.getAccountId());
-        account.setDelta(preAccount.getDelta());
-        sqlSession.update("account.pay", account);
-
-        sqlSession.delete("pre_account.deleteByXid",xid);
-
+    public Account selectAccountById(String accountId) {
+        Account param = new Account();
+        param.setAccountId(accountId);
+        return sqlSession.selectOne("account.selectById", param);
     }
 
     @Override
-    public void payRollback(String xid) {
-        sqlSession.delete("pre_account.deleteByXid",xid);
+    public int updateAccount(Account account) {
+        return sqlSession.update("account.pay", account);
     }
+
+    @Override
+    public int deletePreAccountByXid(String xid) {
+        return sqlSession.delete("pre_account.deleteByXid",xid);
+    }
+
+
 
     public SqlSession getSqlSession() {
         return sqlSession;

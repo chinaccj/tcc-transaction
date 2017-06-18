@@ -1,0 +1,85 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.touna:demo-itemcenter.facade:jar:1.0-SNAPSHOT
+[WARNING] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: com.touna:demo-itemcenter.service:jar -> duplicate declaration of version ${demo-itemcenter.service.version} @ com.touna:demo-itemcenter:1.0-SNAPSHOT, /Users/yumo/git/repository/opensource/myopensource/tcc-transaction/tcc-demo/demo-itemcenter/pom.xml, line 118, column 19
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.touna:demo-itemcenter.service:jar:1.0-SNAPSHOT
+[WARNING] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: com.touna:demo-itemcenter.service:jar -> duplicate declaration of version ${demo-itemcenter.service.version} @ com.touna:demo-itemcenter:1.0-SNAPSHOT, /Users/yumo/git/repository/opensource/myopensource/tcc-transaction/tcc-demo/demo-itemcenter/pom.xml, line 118, column 19
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.touna:demo-itemcenter.deploy:jar:1.0-SNAPSHOT
+[WARNING] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: com.touna:demo-itemcenter.service:jar -> duplicate declaration of version ${demo-itemcenter.service.version} @ com.touna:demo-itemcenter:1.0-SNAPSHOT, /Users/yumo/git/repository/opensource/myopensource/tcc-transaction/tcc-demo/demo-itemcenter/pom.xml, line 118, column 19
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.touna:demo-itemcenter:pom:1.0-SNAPSHOT
+[WARNING] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: com.touna:demo-itemcenter.service:jar -> duplicate declaration of version ${demo-itemcenter.service.version} @ line 118, column 19
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] demo-itemcenter
+[INFO] demo-itemcenter.facade
+[INFO] demo-itemcenter.service
+[INFO] demo-itemcenter.deploy
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building demo-itemcenter 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ demo-itemcenter ---
+[INFO] com.touna:demo-itemcenter:pom:1.0-SNAPSHOT
+[INFO] \- org.codehaus.xfire:xfire-all:jar:1.2.6:compile
+[INFO]    +- org.codehaus.xfire:xfire-aegis:jar:1.2.6:compile
+[INFO]    |  \- net.java.dev.stax-utils:stax-utils:jar:20040917:compile
+[INFO]    +- org.codehaus.xfire:xfire-ws-security:jar:1.2.6:compile
+[INFO]    |  +- jmock:jmock:jar:1.0.1:compile
+[INFO]    |  +- xfire:opensaml:jar:1.0.1:compile
+[INFO]    |  +- bouncycastle:bcprov-jdk15:jar:133:compile
+[INFO]    |  +- xerces:xercesImpl:jar:2.7.1:compile
+[INFO]    |  +- xml-apis:xml-apis:jar:1.0.b2:compile
+[INFO]    |  +- xml-security:xmlsec:jar:1.3.0:compile
+[INFO]    |  +- commons-logging:commons-logging:jar:1.0.4:compile
+[INFO]    |  +- wss4j:wss4j:jar:1.5.1:compile
+[INFO]    |  \- commons-discovery:commons-discovery:jar:0.2:compile
+[INFO]    +- org.codehaus.xfire:xfire-core:jar:1.2.6:compile
+[INFO]    |  +- javax.activation:activation:jar:1.1:compile
+[INFO]    |  +- javax.mail:mail:jar:1.4:compile
+[INFO]    |  +- wsdl4j:wsdl4j:jar:1.6.1:compile
+[INFO]    |  +- jaxen:jaxen:jar:1.1-beta-9:compile
+[INFO]    |  |  \- xerces:xmlParserAPIs:jar:2.6.2:compile
+[INFO]    |  +- stax:stax-api:jar:1.0.1:compile
+[INFO]    |  +- commons-codec:commons-codec:jar:1.3:compile
+[INFO]    |  +- org.apache.ws.commons:XmlSchema:jar:1.1:compile
+[INFO]    |  +- org.codehaus.woodstox:wstx-asl:jar:3.2.0:compile
+[INFO]    |  +- jdom:jdom:jar:1.0:compile
+[INFO]    |  \- commons-httpclient:commons-httpclient:jar:3.0:compile
+[INFO]    +- org.codehaus.xfire:xfire-java5:jar:1.2.6:compile
+[INFO]    |  \- xfire:xfire-jsr181-api:jar:1.0-M1:compile
+[INFO]    +- org.codehaus.xfire:xfire-generator:jar:1.2.6:compile
+[INFO]    |  \- org.codehaus.xfire:xfire-jaxb2:jar:1.2.6:compile
+[INFO]    |     \- com.sun.xml.bind:jaxb-xjc:jar:2.0.1:compile
+[INFO]    |        \- com.sun.xml.bind:jaxb-impl:jar:2.0.1:compile
+[INFO]    +- org.codehaus.xfire:xfire-xmlbeans:jar:1.2.6:compile
+[INFO]    |  \- xmlbeans:xbean:jar:2.2.0:compile
+[INFO]    +- org.codehaus.xfire:xfire-annotations:jar:1.2.6:compile
+[INFO]    |  +- commons-beanutils:commons-beanutils:jar:1.7.0:compile
+[INFO]    |  \- commons-attributes:commons-attributes-api:jar:2.1:compile
+[INFO]    |     +- ant:ant:jar:1.5:compile
+[INFO]    |     \- qdox:qdox:jar:1.5:compile
+[INFO]    +- org.codehaus.xfire:xfire-jaxws:jar:1.2.6:compile
+[INFO]    |  +- javax.xml.ws:jaxws-api:jar:2.0:compile
+[INFO]    |  |  \- javax.xml.bind:jaxb-api:jar:2.0:compile
+[INFO]    |  |     \- javax.xml.bind:jsr173_api:jar:1.0:compile
+[INFO]    |  +- com.sun.xml.messaging.saaj:saaj-impl:jar:1.3:compile
+[INFO]    |  \- javax.xml.soap:saaj-api:jar:1.3:compile
+[INFO]    \- org.codehaus.xfire:xfire-spring:jar:1.2.6:compile
+[INFO]       +- junit:junit:jar:4.11:test
+[INFO]       |  \- org.hamcrest:hamcrest-core:jar:1.3:test
+[INFO]       \- org.apache.xbean:xbean-spring:jar:2.8:compile
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building demo-itemcenter.facade 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+Downloading: http://10.0.4.70:7080/nexus/content/groups/public/com/touna/tcc-core/1.0-SNAPSHOT/maven-metadata.xml

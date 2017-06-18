@@ -1,8 +1,14 @@
 package com.touna.tcc.demo.trading.service;
 
 import com.sun.corba.se.spi.orbutil.threadpool.ThreadPool;
+import com.touna.tcc.demo.trading.base.BaseTest;
+import com.touna.tcc.demo.trading.web.util.XidGenerator;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.type.MethodMetadata;
 
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -10,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by chenchaojian on 17/5/27.
@@ -17,78 +24,72 @@ import java.util.concurrent.*;
  * 多线程测试：
  * 测试事务是否会窜掉。得模拟真实trading例子。模拟一个账户不停得充值（多线程），同时不停的消费（多线程）。最终看数据是否对。
  */
-public class PerformanceTest {
-    static ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
+public class PerformanceTest extends BaseTest {
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceTest.class);
 
-    static ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 20, 5, TimeUnit.SECONDS,
-            new ArrayBlockingQueue<Runnable>(2048),new ThreadFactory(){
+    AtomicInteger index = new AtomicInteger();
+
+    @Resource
+    protected OrderService orderService;
+
+    private static ExecutorService exec = new ThreadPoolExecutor(100, 100, 0L,
+            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100000),
+            new ThreadPoolExecutor.CallerRunsPolicy());
+
+
+
+    @Test
+    public void testPlaceOrder(){
+        for(int i=0;i<10000;i++) {
+            exec.execute(new Event());
+            exec.execute(new Event1());
+
+        }
+
+        try {
+            Thread.sleep(1000*1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private  class Event implements Runnable{
+
         @Override
-        public Thread newThread(Runnable r) {
-            return new Thread(r,"test thread ....");
+        public void run() {
+            try{
+                String xid = XidGenerator.getNewXid("OD");
+                if(logger.isInfoEnabled()){
+                    logger.info(xid);
+                }
+
+                orderService.placeOrder(xid, "1", "1", 1.00);
+
+                System.out.println(index.incrementAndGet());
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
-    );
 
-    public static void main(String args[]) throws InterruptedException {
+    private  class Event1 implements Runnable{
 
-//        Runnable runnable = new Runnable() {
-//            public void run() {
-//
-//                try {
-//                    // task to run goes here
-//                    System.out.println("Hello !!");
-//                    Thread.sleep(1000*100);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//            }
-//        };
+        @Override
+        public void run() {
+            try{
+                String xid = XidGenerator.getNewXid("OD");
+                if(logger.isInfoEnabled()){
+                    logger.info(xid);
+                }
 
+                orderService.placeOrder(xid, "1", "1", 3.00);
 
-//
-//        // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
-//        service.scheduleAtFixedRate(runnable, 1, 100, TimeUnit.SECONDS);
-//        Hello h = new Hello();
-//        Method[] methods = Hello.class.getMethods();
-//        for(Method m:methods){
-//            if(Modifier.isPublic(m.getModifiers())){
-//                try {
-//                    if(m.getName().equals("hello")) {
-//                        Object[] argums = new Object[0];
-//                        List list = new ArrayList(0);
-//                        m.invoke(h, list.toArray());
-//                    }
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                } catch (InvocationTargetException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-
-//        for(int i=0;i<100;i++) {
-//            executor.execute(runnable);
-//        }
-
-//        Thread.sleep(1000*1000);
-
-
-        System.out.println(UUID.randomUUID().toString());
-
-
-
-    }
-
-
-    public static class Hello{
-        public Hello() {
-        }
-
-        public void hello(){
-            System.out.println("hello world");
-
+                System.out.println(index.incrementAndGet());
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
+
 }

@@ -26,4 +26,11 @@
     	 values
     	 (#{xid}, #{status}, now())
     </insert>
+	<select id="selectByXid" parameterType="String" resultMap="tx">
+		select * from tcc_tx where xid=#{xid}
+	</select>
+
+	<select id="selectStatusByXid" parameterType="String" resultType="Integer">
+		select status from tcc_tx where xid=#{xid}
+	</select>
 </mapper>

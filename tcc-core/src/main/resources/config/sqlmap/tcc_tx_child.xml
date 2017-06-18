@@ -33,4 +33,16 @@
     	 values
     	 (#{cXid},#{xid},#{sequence}, #{status}, now(),#{clsName},#{commitMethod},#{rollbackMethod},#{paramesTypes},#{paramesValues})
     </insert>
+
+	<select id="selectByCxid" parameterType="String" resultMap="txChild">
+		select * from tcc_tx_child where child_xid=#{cxid} limit 1;
+	</select>
+
+	<select id="selectStatusByXid" parameterType="String" resultType="Integer">
+		select status from tcc_tx_child where child_xid=#{cxid} limit 1;
+	</select>
+
+	<select id="selectByXid" parameterType="String" resultMap="txChild">
+		select * from tcc_tx_child where xid=#{xid}
+	</select>
 </mapper>

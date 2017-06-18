@@ -29,7 +29,7 @@ public class TxChild {
      * 参考 com.touna.tcc.core.transaction.XaState
      */
     private int status;
-    private Date begainTime;
+    private Date beginTime;
     private Date endTime;
     private long duration;
 
@@ -73,13 +73,6 @@ public class TxChild {
         this.status = status;
     }
 
-    public Date getBegainTime() {
-        return begainTime;
-    }
-
-    public void setBegainTime(Date begainTime) {
-        this.begainTime = begainTime;
-    }
 
     public Date getEndTime() {
         return endTime;
@@ -143,5 +136,13 @@ public class TxChild {
 
     public void setSequence(int sequence) {
         this.sequence = sequence;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
     }
 }

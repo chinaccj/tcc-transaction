@@ -13,6 +13,15 @@
   <name>demo-itemcenter.service</name>
   <dependencies>
     <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.touna</groupId>
+      <artifactId>demo-itemcenter.facade</artifactId>
+      <version>${demo-itemcenter.facade.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.touna</groupId>
       <artifactId>demo-itemcenter.facade</artifactId>
       <!--<version>${demo-pay.facade.version}</version>-->

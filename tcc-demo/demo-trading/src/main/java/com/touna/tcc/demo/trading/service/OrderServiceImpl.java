@@ -24,70 +24,49 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @TccTransactional(xidIndex = 0)
     @Transactional()
-    public void placeOrder(String xid,String userId,String productId,Double price) {
+    public void placeOrder(String xid,String accountId,String productId,Double price) {
 
 
         String uuid = UUID.randomUUID().toString();
-        accountFacade.pay(xid, "1", price);
+        accountFacade.pay(xid, accountId, price);
 
-        itemFacade.sell(xid,"1",1);
+        itemFacade.sell(xid, productId, 1);
         //db operate
     }
 
+    @TccTransactional(xidIndex = 0)
     @Override
-    public void placeOrderWithTryException1(String userId, String productId, Float price) {
+    public void placeOrderWithTryException1(String xid) {
+        accountFacade.tg1Api1(xid);
+        accountFacade.tg1Api2(xid);
+    }
+
+    @TccTransactional(xidIndex = 0)
+    @Override
+    public void placeOrderWithTryException2(String xid) {
+        accountFacade.tg1Api1Plus(xid);
+        accountFacade.tg1Api2Plus(xid);
+    }
+
+    @TccTransactional(xidIndex = 0)
+    @Override
+    public void placeOrderWithMockTryException(String xid) {
+        accountFacade.tg2mockApi1(xid);
+        accountFacade.tg2mockApi2(xid);
 
     }
 
     @Override
-    public void placeOrderWithTryException2(String userId, String productId, Float price) {
-
-    }
-
-    @Override
-    public void placeOrderWithTryException3(String userId, String productId, Float price) {
-
-    }
-
-    @Override
-    public void placeOrderWithMockTryException(String userId, String productId, Float price) {
-
-    }
-
-    @Override
-    public void placeOrderWithCommitException1(String userId, String productId, Float price) {
-
-    }
-
-    @Override
-    public void placeOrderWithCommitException2(String userId, String productId, Float price) {
-
-    }
-
-    @Override
-    public void placeOrderWithCommitException3(String userId, String productId, Float price) {
-
+    public void placeOrderWithCommitException1(String xid) {
+        accountFacade.tg4Api1(xid);
+        accountFacade.tg4Api2(xid);
     }
 
 
     @Override
-    public void placeOrderWithRollbackException(String userId, String productId, Float price) {
-
+    public void placeOrderWithTCCUnSpecifications(String xid) {
+        accountFacade.tg5Api1(xid);
+        accountFacade.tg5Api2(xid);
     }
 
-    @Override
-    public void placeOrderWithTCCAndSpringTx(String userId, String productId, Float price) {
-
-    }
-
-    @Override
-    public void placeOrderWithTCCUnSpecifications(String userId, String productId, Float price) {
-
-    }
-
-
-//    @TCCTransactional
-//    public void test() {
-//        System.out.println("test ");
-//    }
 }

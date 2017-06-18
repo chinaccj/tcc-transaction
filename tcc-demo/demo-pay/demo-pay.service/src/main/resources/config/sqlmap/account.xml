@@ -16,7 +16,7 @@
       update account set balance=balance-#{delta} where account_id=#{accountId}
     </update>
 
-    <select id="selectById" resultType="account">
+    <select id="selectById" resultMap="account">
       select * from account where account_id=#{accountId}
     </select>
 </mapper>

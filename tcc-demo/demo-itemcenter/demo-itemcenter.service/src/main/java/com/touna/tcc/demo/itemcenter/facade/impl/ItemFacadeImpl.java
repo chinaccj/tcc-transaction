@@ -28,4 +28,74 @@ public class ItemFacadeImpl implements ItemFacade {
     public void sellRollback(String xid, TccContext tccContext) {
         itemService.sellRollback(xid,tccContext);
     }
+
+    @Override
+    public void test(String xid) {
+        System.out.println("ItemFacadeImpl try "+xid);
+    }
+
+    @Override
+    public void testCommit(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl commit "+xid);
+
+    }
+
+    @Override
+    public void testRollback(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl rollback "+xid);
+
+    }
+
+    @Override
+    public void tryFail(String xid) {
+        throw new RuntimeException("test");
+    }
+
+    @Override
+    public void tryFailCommit(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl commit "+xid);
+    }
+
+    @Override
+    public void tryFailRollback(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl rollback "+xid);
+    }
+
+    @Override
+    public void tryTimeout(String xid) {
+        try {
+            Thread.sleep(1000*10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void tryTimeoutCommit(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl commit "+xid);
+
+    }
+
+    @Override
+    public void tryTimeoutRollback(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl rollback "+xid);
+    }
+
+    @Override
+    public void unSpecifications(String xid) {
+        System.out.println("ItemFacadeImpl try "+xid);
+
+    }
+
+    @Override
+    public void unSpecificationsCommit(String xid) {
+        System.out.println("ItemFacadeImpl commit "+xid);
+
+    }
+
+    @Override
+    public void unSpecificationsRollback(String xid) {
+        System.out.println("ItemFacadeImpl rollback "+xid);
+
+    }
 }
