@@ -19,16 +19,14 @@
         <property name="transactionManagerBeanName" value="tccTransaction"/>
     </bean>
 
+    <!--bean id tccTransaction 不能更改-->
     <bean id="tccTransaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">
+        <!--tcc commit/rollback 方法序列化分配空间（字节数）。分配大小依据TccContext的大小。
+        如果TccContext都没用上，设置128足够-->
+        <constructor-arg value="1024"/>
         <property name="txLogService" ref="txLogService"></property>
         <property name="txChildLogService" ref="txChildLogService"></property>
     </bean>
-
-    <!--<bean id="tccTransaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">-->
-        <!--<property name="txLogService" ref="dummyTxLogService"></property>-->
-        <!--<property name="txChildLogService" ref="dummyTxChildLogService"></property>-->
-    <!--</bean>-->
-
     <import resource="classpath:config/tcc-core-service.xml"/>
 </beans>
 

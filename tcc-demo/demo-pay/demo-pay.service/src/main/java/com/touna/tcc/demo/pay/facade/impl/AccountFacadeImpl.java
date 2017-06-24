@@ -53,7 +53,7 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void tg1Api1Rollback(String xid, TccContext tccContext) {
-        itemFacade.testRollback(xid,tccContext);
+        itemFacade.testRollbackException(xid,tccContext);
     }
 
     @Override
@@ -113,6 +113,8 @@ public class AccountFacadeImpl implements AccountFacade {
      */
     @Override
     public void tg2mockApi1(String xid) {
+        System.out.println("tg2mockApi1 try ...");
+
         itemFacade.tryTimeout(xid);
     }
 
@@ -123,12 +125,14 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void tg2mockApi1Rollback(String xid, TccContext tccContext) {
+        System.out.println("tg2mockApi1Rollback ...");
         itemFacade.tryTimeoutRollback(xid, tccContext);
 
     }
 
     @Override
     public void tg2mockApi2(String xid) {
+        System.out.println("tg2mockApi2 try ...");
         itemFacade.test(xid);
 
     }
@@ -194,7 +198,7 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public void tg5Api1Commit(String xid, TccContext tccContext) {
+    public void tg5Api1Commit(String xid) {
         itemFacade.unSpecificationsCommit(xid);
     }
 

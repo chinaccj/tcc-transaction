@@ -15,11 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
 
-import com.touna.tcc.core.IllegalOperationException;
+import com.touna.tcc.core.TccIllegalOperationException;
 import com.touna.tcc.core.TccFrameworkException;
 import com.touna.tcc.core.TccTransactional;
 import com.touna.tcc.core.log.service.TxLogService;
-import com.touna.tcc.core.transaction.Transaction;
 import com.touna.tcc.core.transaction.TransactionManager;
 import com.touna.tcc.core.transaction.TransactionStatus;
 import com.touna.tcc.core.transaction.TransactionSynchronizationManager;
@@ -48,19 +47,25 @@ public class TccTransactionInterceptor implements BeanFactoryAware, Initializing
 
         try {
 
+            //try
             retVal = pjp.proceed();
 
             //try success log
-            logTrySuccess();
+            logTrySuccess(xid);
 
-            //commit
-            txInfo.getTransactionManager().commit(txInfo);
+            //commit 有异常,业务算成功
+            try {
+                txInfo.getTransactionManager().commit(txInfo);
+            }catch (Throwable ex){
+                logger.warn(ex.getMessage(), ex);
+                return retVal;
+            }
 
             //
         } catch (Throwable ex) {
             logger.error(ex.toString(), ex);
 
-            //回滚
+            //if try face exception,rollback
             txInfo.getTransactionManager().rollback(txInfo);
             throw ex;
         } finally {
@@ -85,7 +90,7 @@ public class TccTransactionInterceptor implements BeanFactoryAware, Initializing
             return (String) obj;
 
         } catch (ClassCastException ex) {
-            throw new IllegalOperationException(
+            throw new TccIllegalOperationException(
                 "illegal use of tcc framework. method with @TCCTransactional must have a param with xid(String type)");
 
         } catch (Throwable ex) {
@@ -93,10 +98,12 @@ public class TccTransactionInterceptor implements BeanFactoryAware, Initializing
         }
     }
 
-    protected void logTrySuccess() {
-        Transaction tx = TransactionSynchronizationManager.getResource();
-        String xid = tx.getXid();
 
+    protected void logCommitFail(String xid) {
+        txLogService.comfirmFail(xid);
+    }
+
+    protected void logTrySuccess(String xid) {
         txLogService.trySuccess(xid);
 
     }

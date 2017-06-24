@@ -17,7 +17,6 @@ public interface OrderService {
      */
     void placeOrderWithTryException2(String xid);
 
-
     /**
      * 模拟try 失败，其实provider 已经执行成功场景。比如provider超时
      */
@@ -26,13 +25,20 @@ public interface OrderService {
     /**
      * 模拟commit 失败的场景 第一个facade commit 失败。commit失败，算业务成功
      */
-    void placeOrderWithCommitException1(String xid);
+    String placeOrderWithCommitException1(String xid);
 
+
+    /**
+     * 模拟commit 失败的场景 第二个facade commit 失败。commit失败，算业务成功
+     */
+    String placeOrderWithCommitException2(String xid);
 
     /**
      * 不遵守tcc规范，比如xid类型不对,xid 位置不对，commit/rollback参数不对等
      */
     void placeOrderWithTCCUnSpecifications(String xid);
+
+
 
 
 }

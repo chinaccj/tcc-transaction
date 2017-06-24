@@ -9,6 +9,8 @@
         <!--<result property="xid" column="xid" jdbcType="VARCHAR"/>-->
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="balance" column="balance" jdbcType="DOUBLE"/>
+        <result property="preBalance" column="pre_balance" jdbcType="DOUBLE"/>
+
     </resultMap>
 
 
@@ -16,7 +18,19 @@
       update account set balance=balance-#{delta} where account_id=#{accountId}
     </update>
 
+    <update id="prePay" parameterType="account">
+        update account set pre_balance=pre_balance-#{delta} where account_id=#{accountId}
+    </update>
+
+    <update id="prePayRollback" parameterType="account">
+        update account set pre_balance=pre_balance+#{delta} where account_id=#{accountId}
+    </update>
+
     <select id="selectById" resultMap="account">
       select * from account where account_id=#{accountId}
+    </select>
+
+    <select id="selectByIdForUpdate" resultMap="account">
+        select * from account where account_id=#{accountId} for update 
     </select>
 </mapper>

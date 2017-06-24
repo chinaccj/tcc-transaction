@@ -22,8 +22,8 @@ CREATE TABLE `tcc_tx_child` (
   `cls_name` VARCHAR(300) DEFAULT null COMMENT 'facade 接口',
   `commit_method` VARCHAR(120) DEFAULT null COMMENT 'commit 方法名',
   `rollback_method` VARCHAR(120) DEFAULT null COMMENT 'rollback 方法名',
-  `parames_types` VARCHAR(1024) DEFAULT null COMMENT '请求参数类型列表',
-  `parames_values` VARCHAR(8192) DEFAULT null COMMENT '请求参数值 序列化',
+  `parames_types` VARCHAR(128) DEFAULT null COMMENT '请求参数类型列表',
+  `parames_values` VARCHAR(2048) DEFAULT null COMMENT '请求参数值 序列化',
   PRIMARY KEY (`child_xid`),
   KEY `idx_xid` (`xid`) USING BTREE,
   KEY `idx_begin_time` (`begin_time`) USING BTREE
@@ -51,8 +51,8 @@ CREATE TABLE `tcc_tx_child_archive` (
   `cls_name` VARCHAR(300) DEFAULT null COMMENT 'facade 接口',
   `commit_method` VARCHAR(120) DEFAULT null COMMENT 'commit 方法名',
   `rollback_method` VARCHAR(120) DEFAULT null COMMENT 'rollback 方法名',
-  `parames_types` VARCHAR(1024) DEFAULT null COMMENT '请求参数类型列表',
-  `parames_values` VARCHAR(8192) DEFAULT null COMMENT '请求参数值 序列化',
+  `parames_types` VARCHAR(128) DEFAULT null COMMENT '请求参数类型列表',
+  `parames_values` VARCHAR(2048) DEFAULT null COMMENT '请求参数值 序列化',
   PRIMARY KEY (`child_xid`),
   KEY `idx_xid` (`xid`) USING BTREE,
   KEY `idx_begin_time` (`begin_time`) USING BTREE

@@ -101,7 +101,7 @@ public interface AccountFacade {
      */
     @TwoPhaseBusinessAction(commitMethod="tg5Api1Commit",rollbackMethod="tg5Api1Rollback")
     void tg5Api1(String xid);
-    void tg5Api1Commit(String xid,TccContext tccContext);
+    void tg5Api1Commit(String xid);
     void tg5Api1Rollback(String xid,TccContext tccContext);
 
     @TwoPhaseBusinessAction(commitMethod="tg5Api2Commit",rollbackMethod="tg5Api2Rollback")

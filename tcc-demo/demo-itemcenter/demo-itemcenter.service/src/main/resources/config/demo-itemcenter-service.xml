@@ -7,8 +7,12 @@
 
 
     <bean id="itemService" class="com.touna.tcc.demo.itemcenter.service.impl.ItemServiceImpl" >
-        <property name="itemDao" ref="itemDao"/>
+        <property name="preProductDao" ref="preProductDao"/>
+        <property name="productDao" ref="productDao" />
     </bean>
+
     <bean id="itemServicefacade" class="com.touna.tcc.demo.itemcenter.facade.impl.ItemFacadeImpl" />
+
+    <import resource="classpath*:config/demo-itemcenter-dao.xml" />
 
 </beans>

@@ -46,7 +46,11 @@
     </bean>
 
 
-    <bean id="itemDao" class="com.touna.tcc.demo.itemcenter.dao.ItemDaoImpl">
+    <bean id="preProductDao" class="com.touna.tcc.demo.itemcenter.dao.PreProductDaoImpl">
+        <property name="sqlSession" ref="sessionTemplate"/>
+    </bean>
+
+    <bean id="productDao" class="com.touna.tcc.demo.itemcenter.dao.ProductDaoImpl">
         <property name="sqlSession" ref="sessionTemplate"/>
     </bean>
 

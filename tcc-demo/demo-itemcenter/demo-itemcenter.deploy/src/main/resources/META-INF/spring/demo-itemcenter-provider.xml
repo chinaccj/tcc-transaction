@@ -31,7 +31,6 @@
     <dubbo:service interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" ref="itemServicefacade"/>
 
     <import resource="classpath*:config/demo-itemcenter-service.xml" />
-    <import resource="classpath*:config/demo-itemcenter-dao.xml" />
 
 
 </beans>

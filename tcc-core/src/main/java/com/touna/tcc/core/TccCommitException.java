@@ -3,7 +3,7 @@ package com.touna.tcc.core;
 /**
  * Created by chenchaojian on 17/5/28.
  */
-public class TccCommitException extends TccFrameworkException {
+public class TccCommitException extends Exception {
 
     public TccCommitException() {
         super();

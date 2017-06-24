@@ -24,11 +24,5 @@
 
     <bean id="dummyTxChildLogService" class="com.touna.tcc.core.log.service.DummyTxChildLogService" />
 
-
-    <bean id="serializer" class="com.touna.tcc.core.log.KryoSerializer">
-        <!--注意该值要跟数据库的 tcc_tx_child 的parames_values 值保持一致。-->
-        <property name="maxCapacity" value="8192" />
-    </bean>
-
     <import resource="classpath:config/tcc-core-dao.xml"/>
 </beans>

@@ -25,4 +25,8 @@
 	<select id="selectByXid" parameterType="String" resultMap="productExt">
 		select xid,product_id,create_time,delta from pre_product where xid=#{xid}
 	</select>
+
+	<select id="selectByXidForUpdate" parameterType="String" resultMap="productExt">
+		select xid,product_id,create_time,delta from pre_product where xid=#{xid} for update
+	</select>
 </mapper>

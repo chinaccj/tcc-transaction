@@ -21,17 +21,17 @@ public class ItemFacadeImpl implements ItemFacade {
 
     @Override
     public void sellCommit(String xid, TccContext tccContext) {
-        itemService.sellCommit(xid,tccContext);
+        itemService.sellCommit(xid, tccContext);
     }
 
     @Override
     public void sellRollback(String xid, TccContext tccContext) {
-        itemService.sellRollback(xid,tccContext);
+        itemService.sellRollback(xid, tccContext);
     }
 
     @Override
     public void test(String xid) {
-        System.out.println("ItemFacadeImpl try "+xid);
+        System.out.println("ItemFacadeImpl try " + xid);
     }
 
     @Override
@@ -43,6 +43,13 @@ public class ItemFacadeImpl implements ItemFacade {
     @Override
     public void testRollback(String xid, TccContext tccContext) {
         System.out.println("ItemFacadeImpl rollback "+xid);
+
+    }
+
+    @Override
+    public void testRollbackException(String xid, TccContext tccContext) {
+        System.out.println("ItemFacadeImpl rollback with exception "+xid);
+        throw new RuntimeException("test");
 
     }
 
@@ -65,6 +72,8 @@ public class ItemFacadeImpl implements ItemFacade {
     public void tryTimeout(String xid) {
         try {
             Thread.sleep(1000*10);
+            System.out.println("tryTimeout ...");
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

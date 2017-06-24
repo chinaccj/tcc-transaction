@@ -1,5 +1,7 @@
 package com.touna.tcc.core.transaction;
 
+import com.touna.tcc.core.TccCommitException;
+import com.touna.tcc.core.TccRollbackException;
 import com.touna.tcc.core.interceptor.TransactionInfo;
 import com.touna.tcc.core.log.service.TxChildLogService;
 import com.touna.tcc.core.log.service.TxLogService;
@@ -18,9 +20,13 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
      */
     protected TxLogService txLogService;
     protected TxChildLogService txChildLogService;
+    private int serializeMaxCapacity;
 
     protected BeanFactory beanFactory;
 
+    public AbstractTransactionManager(int serializeMaxCapacity){
+        this.serializeMaxCapacity = serializeMaxCapacity;
+    }
     public final TransactionStatus getTransaction(String xid) {
         Transaction tx = TransactionSynchronizationManager.getResource();
         if (tx != null) {
@@ -55,22 +61,22 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
      * 提交由第三方SOA 框架实现
      */
     @Override
-    public  void commit(TransactionInfo txInfo){
+    public  void commit(TransactionInfo txInfo)throws TccCommitException{
         if(txInfo.getTransactionStatus().isNewTransaction()){//else 非最外层方法，不做处理
 
             doCommit(txInfo);
         }
     }
 
-    public abstract void doCommit(TransactionInfo txInfo);
+    public abstract void doCommit(TransactionInfo txInfo)throws TccCommitException;
 
-    public abstract void  doRollback(TransactionInfo txInfo);
+    public abstract void  doRollback(TransactionInfo txInfo)throws TccRollbackException;
 
     /**
      *  回滚由第三方SOA 框架实现
      */
     @Override
-    public void rollback(TransactionInfo txInfo){
+    public void rollback(TransactionInfo txInfo)throws TccRollbackException{
         if(txInfo.getTransactionStatus().isNewTransaction()){//else 非最外层方法，不做处理
             doRollback(txInfo);
         }
@@ -101,5 +107,13 @@ abstract public class AbstractTransactionManager implements TransactionManager, 
     @Override
     public void afterPropertiesSet() throws Exception {
 
+    }
+
+    public int getSerializeMaxCapacity() {
+        return serializeMaxCapacity;
+    }
+
+    public void setSerializeMaxCapacity(int serializeMaxCapacity) {
+        this.serializeMaxCapacity = serializeMaxCapacity;
     }
 }

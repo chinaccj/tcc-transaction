@@ -28,13 +28,13 @@ public class TransactionSynchronizationManager {
         return transactionHolder.get();
     }
 
-    public static TCCInvokeMetadata getInvokeMetadata(String clsName){
+    public static TCCInvokeMetadata getInvokeMetadata(String clsName,String tryMethodName){
         Map<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
         if(metadataMap == null){
             return null;
         }
 
-        return metadataMap.get(clsName);
+        return metadataMap.get(TransactionSynchronizationUtils.invokeMetadataKey(clsName,tryMethodName));
     }
 
     public static List<TCCInvokeMetadata> getInvokeMetadataList(){
@@ -50,7 +50,7 @@ public class TransactionSynchronizationManager {
      * @param invokeMetadata
      * @return
      */
-    public static void setTCCInvokeMetadata(TCCInvokeMetadata invokeMetadata){
+    public static void setTCCInvokeMetadata(String clsName,String tryMethodName,TCCInvokeMetadata invokeMetadata){
         Map<String,TCCInvokeMetadata> metadataMap = invokeMetadataHolder.get();
         if(metadataMap == null){
             synchronized (lock) {
@@ -61,7 +61,7 @@ public class TransactionSynchronizationManager {
             }
         }
 
-        metadataMap.put(invokeMetadata.getClsName(), invokeMetadata);
+        metadataMap.put(TransactionSynchronizationUtils.invokeMetadataKey(clsName, tryMethodName), invokeMetadata);
         invokeMetadataHolder.set(metadataMap);
     }
 

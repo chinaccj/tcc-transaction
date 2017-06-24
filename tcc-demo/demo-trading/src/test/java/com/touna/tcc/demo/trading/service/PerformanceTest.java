@@ -40,7 +40,7 @@ public class PerformanceTest extends BaseTest {
 
     @Test
     public void testPlaceOrder(){
-        for(int i=0;i<10000;i++) {
+        for(int i=0;i<5000;i++) {
             exec.execute(new Event());
             exec.execute(new Event1());
 

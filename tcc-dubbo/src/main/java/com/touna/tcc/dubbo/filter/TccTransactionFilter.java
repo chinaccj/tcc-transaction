@@ -11,7 +11,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.touna.tcc.core.Attachment;
-import com.touna.tcc.core.IllegalOperationException;
+import com.touna.tcc.core.TccIllegalOperationException;
 import com.touna.tcc.core.TccContext;
 import com.touna.tcc.core.TwoPhaseBusinessAction;
 import com.touna.tcc.core.transaction.*;
@@ -31,6 +31,7 @@ public class TccTransactionFilter implements Filter {
 
         boolean isTccTry = false;
         String clsNameRef = null;
+        String tryMethodNameRef = null;
         /**
          * both success try and fail try need to log. both success try and fail try need to rollback while exception
          * occur(timeout or network may cause try fail,but provider may success executed).
@@ -52,12 +53,12 @@ public class TccTransactionFilter implements Filter {
 
                     isTccTry = true;
                     clsNameRef = cls.getName();
+                    tryMethodNameRef = methodName;
+                    String commitMethod = annotation.commitMethod();
+                    String rollbackMethod = annotation.rollbackMethod();
 
                     //forbid dubbo failover cluster call provider repeatly
-                    if (TransactionSynchronizationManager.getInvokeMetadata(cls.getName()) == null) {
-
-                        String commitMethod = annotation.commitMethod();
-                        String rollbackMethod = annotation.rollbackMethod();
+                    if (TransactionSynchronizationManager.getInvokeMetadata(cls.getName(), methodName) == null) {
 
                         //commit and rollback method
                         Class[] cmtRbParamsTypes = new Class[2];
@@ -86,29 +87,32 @@ public class TccTransactionFilter implements Filter {
                         invokeMetadata.setIndex(index);
                         invokeMetadata.setXid(xid);
 
-                        TransactionSynchronizationManager.setTCCInvokeMetadata(invokeMetadata);
+                        TransactionSynchronizationManager.setTCCInvokeMetadata(cls.getName(), methodName, invokeMetadata);
                     }
 
                 }
             }
 
             Result result = invoker.invoke(invocation);
-            if(isTccTry){
-                if(result.getException() == null) {
-                    log(TransactionSynchronizationManager.getInvokeMetadata(clsNameRef),true);
-                }else {
-                    log(TransactionSynchronizationManager.getInvokeMetadata(clsNameRef), false);
+            if (isTccTry) {
+                if (result.getException() == null) {
+                    log(TransactionSynchronizationManager.getInvokeMetadata(clsNameRef, tryMethodNameRef), true);
+                } else {
+                    log(TransactionSynchronizationManager.getInvokeMetadata(clsNameRef, tryMethodNameRef), false);
                 }
             }
 
 
             return result;
 
-        } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
-
-            if(isTccTry) {
-                log(TransactionSynchronizationManager.getInvokeMetadata(clsNameRef), false);
+        }
+        catch (TccIllegalOperationException ex) {
+            //not need to make consumer retry
+            throw new RpcException(RpcException.BIZ_EXCEPTION,ex);
+        }
+        catch (Throwable ex) {
+            if (isTccTry) {
+                log(TransactionSynchronizationManager.getInvokeMetadata(clsNameRef, tryMethodNameRef), false);
             }
 
             throw new RpcException(ex);
@@ -175,13 +179,13 @@ public class TccTransactionFilter implements Filter {
         try {
             Method methodCmt = cls.getDeclaredMethod(commitMethod, paramsType);
         } catch (NoSuchMethodException e) {
-            throw new IllegalOperationException("commit method " + cls + "." + commitMethod + " must signature with String and TccContext");
+            throw new TccIllegalOperationException("commit method " + cls + "." + commitMethod + " must signature with String and TccContext");
         }
 
         try {
             Method methodRollback = cls.getDeclaredMethod(rollbackMethod, paramsType);
         } catch (NoSuchMethodException e) {
-            throw new IllegalOperationException("rollback method " + cls + "." + rollbackMethod + " must signature with String and TccContext");
+            throw new TccIllegalOperationException("rollback method " + cls + "." + rollbackMethod + " must signature with String and TccContext");
         }
 
 

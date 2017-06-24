@@ -21,6 +21,9 @@ public interface ItemFacade {
     void sellCommit(String xid,TccContext tccContext);
 
 
+    void testRollbackException(String xid, TccContext tccContext) ;
+
+
     void sellRollback(String xid,TccContext tccContext);
 
     /**               容错测试              **/

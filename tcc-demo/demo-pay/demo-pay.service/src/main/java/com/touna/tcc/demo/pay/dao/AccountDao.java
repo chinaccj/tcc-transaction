@@ -8,14 +8,35 @@ import com.touna.tcc.demo.pay.dao.model.PreAccount;
  */
 public interface AccountDao {
 
-    void insertWithoutToAccountId(PreAccount preAccount);
+    void insert(PreAccount preAccount);
 
     Account selectAccountById(String accountId);
 
+    /**
+     * 排他锁
+     * @param accountId
+     * @return
+     */
+    Account selectAccountByIdForUpdate(String accountId);
+
+
     PreAccount selectPreAccountByXid(String xid);
 
+    /**
+     * x lock with for update
+     * @param xid
+     * @return
+     */
+    PreAccount selectPreAccountByXidForUpdate(String xid);
 
-    int updateAccount(Account account);
+
+
+    int balanceMinusByDelta(Account account);
+
+    int preBalanceMinusByDelta(Account account);
+
+    int preBalanceAddByDelta(Account account);
+
 
     int deletePreAccountByXid(String xid);
 }

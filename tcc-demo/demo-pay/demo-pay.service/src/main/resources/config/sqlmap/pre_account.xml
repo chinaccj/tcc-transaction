@@ -24,14 +24,12 @@
     	 (#{accountId},#{toAccountId},#{xid},#{operation},#{delta})
     </insert>
 
-    <insert id="insertWithoutToAccountId" parameterType="preAccount">
-		insert into pre_account
-		(account_id,xid, operation,delta)
-		values
-		(#{accountId},#{xid},#{operation},#{delta})
-	</insert>
-
     <select id="selectByXid" parameterType="String" resultMap="preAccount">
 		select * from pre_account where xid=#{xid}
 	</select>
+
+    <select id="selectByXidForUpdate" parameterType="String" resultMap="preAccount">
+        select * from pre_account where xid=#{xid} for update
+    </select>
+
 </mapper>

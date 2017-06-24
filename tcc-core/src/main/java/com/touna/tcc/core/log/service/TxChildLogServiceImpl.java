@@ -36,7 +36,8 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             byte[] bytes = serializer.serialize(new ObjectWrapper(paramValues));
             String strParamValues = new String(bytes, "UTF-8");
 
-            byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes));
+            //paramsType 128byte足够。
+            byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes),128);
             String strParamsType = new String(clssBytes,"UTF-8");
 
             txChild = new TxChild();
@@ -74,7 +75,8 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             byte[] bytes = serializer.serialize(new ObjectWrapper(paramValues));
             String strParamValues = new String(bytes, "UTF-8");
 
-            byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes));
+            //paramsType 128byte足够。
+            byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes),128);
             String strParamsType = new String(clssBytes,"UTF-8");
 
             txChild = new TxChild();

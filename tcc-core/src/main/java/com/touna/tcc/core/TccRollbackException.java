@@ -3,7 +3,7 @@ package com.touna.tcc.core;
 /**
  * Created by chenchaojian on 17/5/28.
  */
-public class TccRollbackException extends TccFrameworkException {
+public class TccRollbackException extends Exception {
 
     public TccRollbackException() {
         super();

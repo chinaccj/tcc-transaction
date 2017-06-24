@@ -10,6 +10,7 @@ public class ProductExt {
     private String productId;
     private Date createTime;
     private Integer remaining;
+    private Integer preRemaining;
     private String xid;
     /**
      * 出货／进货量
@@ -57,5 +58,13 @@ public class ProductExt {
 
     public void setXid(String xid) {
         this.xid = xid;
+    }
+
+    public Integer getPreRemaining() {
+        return preRemaining;
+    }
+
+    public void setPreRemaining(Integer preRemaining) {
+        this.preRemaining = preRemaining;
     }
 }

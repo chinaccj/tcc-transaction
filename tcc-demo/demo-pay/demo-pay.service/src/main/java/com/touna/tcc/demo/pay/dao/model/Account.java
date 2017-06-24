@@ -14,6 +14,12 @@ public class Account {
      * 余额
      */
     private Double balance;
+
+    /**
+     * 预处理余额
+     */
+    private Double preBalance;
+
     /**
      * 本次操作金额
      */
@@ -50,5 +56,13 @@ public class Account {
 
     public void setDelta(Double delta) {
         this.delta = delta;
+    }
+
+    public Double getPreBalance() {
+        return preBalance;
+    }
+
+    public void setPreBalance(Double preBalance) {
+        this.preBalance = preBalance;
     }
 }

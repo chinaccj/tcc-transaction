@@ -30,9 +30,9 @@ public class AccountServiceImpl implements AccountService {
      try
      {
 
-        Account account = accountDao.selectAccountById(accountId);
-        Double balance =  account.getBalance();
-        if(balance - amount < 0){
+        Account account = accountDao.selectAccountByIdForUpdate(accountId);
+        Double preBalance =  account.getPreBalance();
+        if(preBalance - amount < 0){
             throw new IllegalArgumentException("accountId "+accountId+" money not enough" );
         }
 
@@ -48,7 +48,9 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("prePay operation should be 0");
         }
 
-            accountDao.insertWithoutToAccountId(preAccount);
+        accountDao.insert(preAccount);
+        account.setDelta(amount);
+        accountDao.preBalanceMinusByDelta(account);
      } catch (DuplicateKeyException ex) {//幂等性校验 该预处理已经提交过.忽略这种异常
             logger.warn("pre account had done before " + ex.getMessage(), ex);
      }
@@ -58,7 +60,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void payCommit(String xid, String accountId) {
 
-        PreAccount preAccount = accountDao.selectPreAccountByXid(xid);
+        //避免并发操作
+        PreAccount preAccount = accountDao.selectPreAccountByXidForUpdate(xid);
         if (preAccount == null) {
             //幂等性操作。
             return;
@@ -67,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = new Account();
         account.setAccountId(preAccount.getAccountId());
         account.setDelta(preAccount.getDelta());
-        accountDao.updateAccount(account);
+        accountDao.balanceMinusByDelta(account);
         accountDao.deletePreAccountByXid(xid);
 
     }
@@ -76,7 +79,14 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(value="payTransactionManager")
     @Override
     public void payRollback(String xid, String accountId) {
-        accountDao.deletePreAccountByXid(xid);
+        PreAccount preAccount = accountDao.selectPreAccountByXid(xid);
+        int rowsAffected = accountDao.deletePreAccountByXid(xid);
+        if(rowsAffected == 1){//避免并发删除操作，做幂等性保护
+            Account account = new Account();
+            account.setAccountId(accountId);
+            account.setDelta(preAccount.getDelta());
+            accountDao.preBalanceAddByDelta(account);
+        }
     }
 
     @Override

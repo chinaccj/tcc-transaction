@@ -18,7 +18,7 @@ public class AccountDaoImpl implements AccountDao {
 
 
     @Override
-    public void insertWithoutToAccountId(PreAccount preAccount) {
+    public void insert(PreAccount preAccount) {
         try {
 
             //data check
@@ -26,7 +26,7 @@ public class AccountDaoImpl implements AccountDao {
                 throw new IllegalArgumentException("prePay operation should be 0");
             }
 
-            sqlSession.insert("pre_account.insertWithoutToAccountId", preAccount);
+            sqlSession.insert("pre_account.insert", preAccount);
         } catch (DuplicateKeyException ex) {//幂等性校验 该预处理已经提交过.忽略这种异常
             logger.warn("pre account had done before " + ex.getMessage(), ex);
         }
@@ -39,6 +39,11 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
+    public PreAccount selectPreAccountByXidForUpdate(String xid) {
+        return  sqlSession.selectOne("pre_account.selectByXidForUpdate", xid);
+    }
+
+    @Override
     public Account selectAccountById(String accountId) {
         Account param = new Account();
         param.setAccountId(accountId);
@@ -46,8 +51,26 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public int updateAccount(Account account) {
+    public Account selectAccountByIdForUpdate(String accountId) {
+        Account param = new Account();
+        param.setAccountId(accountId);
+        return sqlSession.selectOne("account.selectByIdForUpdate", param);
+    }
+
+
+    @Override
+    public int balanceMinusByDelta(Account account) {
         return sqlSession.update("account.pay", account);
+    }
+
+    @Override
+    public int preBalanceMinusByDelta(Account account) {
+        return sqlSession.update("account.prePay", account);
+    }
+
+    @Override
+    public int preBalanceAddByDelta(Account account) {
+        return sqlSession.update("account.prePayRollback", account);
     }
 
     @Override

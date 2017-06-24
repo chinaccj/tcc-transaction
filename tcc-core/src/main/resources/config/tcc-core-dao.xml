@@ -45,6 +45,10 @@
         <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
 
+    <bean id="serializer" class="com.touna.tcc.core.log.KryoSerializer">
+        <!--注意该值要跟数据库的 tcc_tx_child 的parames_values 值保持一致。-->
+        <property name="maxCapacity" value="#{tccTransaction.getSerializeMaxCapacity()}" />
+    </bean>
 
     <bean id="txDao" class="com.touna.tcc.core.log.dao.TxDaoImpl">
         <property name="sqlSession" ref="sessionTemplate"/>

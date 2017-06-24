@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         accountFacade.tg1Api2Plus(xid);
     }
 
+
     @TccTransactional(xidIndex = 0)
     @Override
     public void placeOrderWithMockTryException(String xid) {
@@ -56,13 +57,26 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @TccTransactional(xidIndex = 0)
     @Override
-    public void placeOrderWithCommitException1(String xid) {
-        accountFacade.tg4Api1(xid);
+    public String placeOrderWithCommitException1(String xid) {
+        accountFacade.tg4Api1(xid);//commit throw exception
         accountFacade.tg4Api2(xid);
+
+        return "OK";
+    }
+
+    @TccTransactional(xidIndex = 0)
+    @Override
+    public String placeOrderWithCommitException2(String xid) {
+        accountFacade.tg4Api2(xid);
+        accountFacade.tg4Api1(xid);//commit throw exception
+
+        return "OK";
     }
 
 
+    @TccTransactional(xidIndex = 0)
     @Override
     public void placeOrderWithTCCUnSpecifications(String xid) {
         accountFacade.tg5Api1(xid);

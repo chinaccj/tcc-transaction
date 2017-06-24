@@ -9,6 +9,8 @@
     <result property="xid" column="xid" jdbcType="VARCHAR"/>
     <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
 	<result property="remaining" column="remaining" jdbcType="INTEGER"/>
+    <result property="preRemaining" column="pre_remaining" jdbcType="INTEGER"/>
+
   </resultMap>
 
 
@@ -16,7 +18,19 @@
         update product set remaining=remaining-#{delta} where product_id=#{productId}
     </update>
 
-   <select id="selectById" resultType="productExt">
+    <update id="preShipping" parameterType="productExt">
+        update product set pre_remaining=pre_remaining-#{delta} where product_id=#{productId}
+    </update>
+
+    <update id="preShippingRollback" parameterType="productExt">
+        update product set pre_remaining=pre_remaining+#{delta} where product_id=#{productId}
+    </update>
+
+   <select id="selectById" parameterType="String" resultMap="productExt">
     select * from product where product_id=#{productId}
   </select>
+
+    <select id="selectByIdForUpdate" resultMap="productExt">
+        select * from product where product_id=#{productId} for update
+    </select>
 </mapper>

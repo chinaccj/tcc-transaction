@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.touna.tcc.core.TccCommitException;
+import com.touna.tcc.core.TccRollbackException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -24,8 +26,12 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
     protected ConcurrentHashMap<String, Object> proxyCache = new ConcurrentHashMap<String, Object>();
 
+    public DubboTransactionManager(int serializeMaxCapacity) {
+        super(serializeMaxCapacity);
+    }
+
     @Override
-    public void doRollback(TransactionInfo txInfo) {
+    public void doRollback(TransactionInfo txInfo) throws TccRollbackException {
 
         List<TCCInvokeMetadata> listInvokeMetadata = TransactionSynchronizationManager
             .getInvokeMetadataList();
@@ -44,33 +50,39 @@ public class DubboTransactionManager extends AbstractTransactionManager
          */
         try {
             for (TCCInvokeMetadata invokeMetadata : listInvokeMetadata) {
-                String clsName = invokeMetadata.getClsName();
-                String rollbackMethod = invokeMetadata.getRollbackMethod();
-                Class[] parameterTypes = invokeMetadata.getParamsTypes();
-                Object[] paramValues = invokeMetadata.getParamValues();
+                try {
+                    String clsName = invokeMetadata.getClsName();
+                    String rollbackMethod = invokeMetadata.getRollbackMethod();
+                    Class[] parameterTypes = invokeMetadata.getParamsTypes();
+                    Object[] paramValues = invokeMetadata.getParamValues();
 
-                Object proxy = proxyCache.get(clsName);
-                if (proxy == null) {
-                    proxy = loadProxy(clsName);
+                    Object proxy = proxyCache.get(clsName);
+                    if (proxy == null) {
+                        proxy = loadProxy(clsName);
+                    }
+
+                    Method method = proxy.getClass().getMethod(rollbackMethod, parameterTypes);
+                    method.invoke(proxy, paramValues);
+                    txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid(),
+                            tx.getBeginTimeMillis());
+                }catch (Throwable ex){
+                    txChildLogService.rollbackFail(tx.getXid(), invokeMetadata.getcXid());
+                    throw ex;
                 }
-
-                Method method = proxy.getClass().getMethod(rollbackMethod, parameterTypes);
-                method.invoke(proxy, paramValues);
-                txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid(),
-                    tx.getBeginTimeMillis());
 
             }
 
             txLogService.finish(xid, tx.getBeginTimeMillis());
 
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
             txLogService.rollbackFail(xid);
+            throw new TccRollbackException(e);
         }
 
     }
 
-    public void doCommit(TransactionInfo txInfo) {
+    @Override
+    public void doCommit(TransactionInfo txInfo) throws TccCommitException {
 
         List<TCCInvokeMetadata> listInvokeMetadata = TransactionSynchronizationManager
             .getInvokeMetadataList();
@@ -88,28 +100,32 @@ public class DubboTransactionManager extends AbstractTransactionManager
         //failed node and not executed node will be redo by compensatory job
         try {
             for (TCCInvokeMetadata invokeMetadata : listInvokeMetadata) {
-                String clsName = invokeMetadata.getClsName();
-                String commitMethod = invokeMetadata.getCommitMethod();
-                Class[] parameterTypes = invokeMetadata.getParamsTypes();
-                Object[] paramValues = invokeMetadata.getParamValues();
+                try {
+                    String clsName = invokeMetadata.getClsName();
+                    String commitMethod = invokeMetadata.getCommitMethod();
+                    Class[] parameterTypes = invokeMetadata.getParamsTypes();
+                    Object[] paramValues = invokeMetadata.getParamValues();
 
-                Object proxy = proxyCache.get(clsName);
-                if (proxy == null) {
-                    proxy = loadProxy(clsName);
+                    Object proxy = proxyCache.get(clsName);
+                    if (proxy == null) {
+                        proxy = loadProxy(clsName);
+                    }
+
+                    Method method = proxy.getClass().getMethod(commitMethod, parameterTypes);
+                    method.invoke(proxy, paramValues);
+
+                    txChildLogService.finish(xid, invokeMetadata.getcXid(), tx.getBeginTimeMillis());
+                }catch (Throwable ex){
+                    txChildLogService.confirmFail(xid, invokeMetadata.getcXid());
+                    throw ex;
                 }
-
-                Method method = proxy.getClass().getMethod(commitMethod, parameterTypes);
-                method.invoke(proxy, paramValues);
-
-                txChildLogService.finish(xid, invokeMetadata.getcXid(), tx.getBeginTimeMillis());
-
             }
 
             txLogService.finish(xid, tx.getBeginTimeMillis());
 
-        } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+        } catch (Throwable ex) {
             txLogService.comfirmFail(xid);
+            throw new TccCommitException(ex);
         }
 
     }
