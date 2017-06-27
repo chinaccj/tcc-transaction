@@ -42,7 +42,7 @@
     <dubbo:registry address="zookeeper://127.0.0.1:2181" client="zkclient" check="false" />
     <!-- 监控中心配置 -->
     <dubbo:monitor protocol="registry" />
-    <dubbo:reference id="accountFacade" interface=" com.touna.tcc.demo.pay.facade.intf.AccountFacade" loadbalance="roundrobin">
+    <dubbo:reference id="accountFacade" interface="com.touna.tcc.demo.pay.facade.intf.AccountFacade" loadbalance="roundrobin">
     </dubbo:reference>
 
     <dubbo:reference id="itemFacade" interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" loadbalance="roundrobin">
