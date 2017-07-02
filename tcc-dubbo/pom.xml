@@ -12,7 +12,18 @@
   <packaging>jar</packaging>
   <name>tcc-dubbo</name>
   <dependencies>
-
+    <!--test-->
+    <dependency>
+      <groupId>com.touna</groupId>
+      <artifactId>demo-itemcenter.facade</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <!--test end-->
+    <dependency>
+      <groupId>com.github.sgroschupf</groupId>
+      <artifactId>zkclient</artifactId>
+      <version>0.1</version>
+    </dependency>
     <dependency>
       <groupId>com.touna</groupId>
       <artifactId>tcc-core</artifactId>

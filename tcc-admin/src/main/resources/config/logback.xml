@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+	<property scope="system" name="APP_NAME" value="demo-trading" />
+	<property scope="system" name="APP_VERSION" value="1.0.0" />
+	<property scope="system" name="LOG_DIR" value="/app/logs/demo-trading/" />
+
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+
+		<file>${LOG_DIR}/${APP_NAME}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/${APP_NAME}-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%-20(%d{yyy-MM-dd HH:mm:ss.SSS} [%X{requestId}]) %-5level -
+				%logger{80} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+		<encoder>
+			<pattern>%-20(%d{yyy-MM-dd HH:mm:ss.SSS} [%X{requestId}]) %-5level -
+				%logger{80} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<root level="INFO">
+		<appender-ref ref="ROLLING" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+</configuration>

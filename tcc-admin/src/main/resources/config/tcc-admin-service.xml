@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+<description>springJTA</description>
+    <context:annotation-config />
+    <aop:aspectj-autoproxy proxy-target-class="false" />
+
+    <!-- DAO scan -->
+    <context:component-scan base-package="com.touna.tcc.admin" />
+
+
+
+    <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:config/ds.conf</value>
+                <value>classpath:config/settings.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding" value="UTF-8" />
+    </bean>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+
+
+    <bean id="applicationConfig" class="com.alibaba.dubbo.config.ApplicationConfig">
+        <property name="name" value="tcc_admin"/>
+    </bean>
+
+    <bean id="registryConfig" class="com.alibaba.dubbo.config.RegistryConfig">
+        <property name="address" value="zookeeper://127.0.0.1:2181"/>
+        <property name="client" value="zkclient"/>
+        <property name="check" value="false"/>
+    </bean>
+
+
+    <bean id="dubboConsumerHacker" class="com.touna.tcc.dubbo.DubboConsumerHackerImpl" destroy-method="destory">
+        <property name="application" ref="applicationConfig"/>
+        <property name="registryConfig" ref="registryConfig"/>
+    </bean>
+
+
+</beans>
+
+
+
+

@@ -11,7 +11,87 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>tcc-admin</name>
-  <modules>
-    <module>tcc-wal</module>
-  </modules>
+
+  <properties>
+    <spring3.version>3.2.8.RELEASE</spring3.version>
+    <jackson.version>1.9.13</jackson.version>
+    <c3p0.version>0.9.1.2</c3p0.version>
+    <common-beans.version>1.0.2-SNAPSHOT</common-beans.version>
+    <demo-pay.facade.version>1.0-SNAPSHOT</demo-pay.facade.version>
+    <demo-itemcenter.facade.version>1.0-SNAPSHOT</demo-itemcenter.facade.version>
+  </properties>
+  <dependencies>
+    <!--admin must dependent all facade jar-->
+    <dependency>
+      <groupId>com.touna</groupId>
+      <artifactId>demo-itemcenter.facade</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.touna</groupId>
+      <artifactId>tcc-dubbo</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.6.11</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${spring3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.6.11</version>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>3.2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring3.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+      <version>3.2.3.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
