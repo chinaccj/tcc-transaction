@@ -2,7 +2,9 @@ package com.touna.tcc.dubbo.filter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
+import com.alibaba.dubbo.common.URL;
 import com.touna.tcc.core.log.service.TxChildLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,7 @@ public class TccTransactionFilter implements Filter {
                 String xid = txObject.getXid();
                 Class cls = invoker.getInterface();
                 String methodName = invocation.getMethodName();
+
                 Class[] paramsTypes = invocation.getParameterTypes();
                 Method method = cls.getDeclaredMethod(methodName, paramsTypes);
                 TwoPhaseBusinessAction annotation = method
@@ -130,17 +133,19 @@ public class TccTransactionFilter implements Filter {
         String rollbackMethod = invokeMetadata.getRollbackMethod();
         Class[]paramsTypes = invokeMetadata.getParamsTypes();
         Object[]paramValues = invokeMetadata.getParamValues();
-
+        //need to log,
+        URL url = RpcContext.getContext().getUrl();
+        String version = url.getParameter(Constants.VERSION_KEY);
 
         if(successful) {
             //may insert or update
             txChildLogService.trySuccess(index, xid, cXid,  clsName,  commitMethod,
-                     rollbackMethod, paramsTypes, paramValues);
+                     rollbackMethod, paramsTypes, paramValues,version);
         }
         else {
             //may insert or update
             txChildLogService.tryFail(index, xid, cXid, clsName, commitMethod,
-                    rollbackMethod, paramsTypes, paramValues);
+                    rollbackMethod, paramsTypes, paramValues,version);
         }
     }
 
@@ -178,16 +183,27 @@ public class TccTransactionFilter implements Filter {
     private void checkMethodSignature(Class cls, Class[] paramsType, String commitMethod, String rollbackMethod) {
         try {
             Method methodCmt = cls.getDeclaredMethod(commitMethod, paramsType);
+            Type returnType = methodCmt.getGenericReturnType();
+            Class returnCls = (Class)returnType;
+            if(!returnCls.isAssignableFrom(java.lang.Boolean.class)){
+                throw new TccIllegalOperationException("commit method " + cls + "." + commitMethod + " return type must be Boolean");
+            }
+
+
         } catch (NoSuchMethodException e) {
             throw new TccIllegalOperationException("commit method " + cls + "." + commitMethod + " must signature with String and TccContext");
         }
 
         try {
             Method methodRollback = cls.getDeclaredMethod(rollbackMethod, paramsType);
+            Type returnTypeRollback = methodRollback.getGenericReturnType();
+            Class returnClsRollback = (Class)returnTypeRollback;
+            if(!returnClsRollback.isAssignableFrom(java.lang.Boolean.class)){
+                throw new TccIllegalOperationException("commit method " + cls + "." + commitMethod + " return type must be Boolean");
+            }
         } catch (NoSuchMethodException e) {
             throw new TccIllegalOperationException("rollback method " + cls + "." + rollbackMethod + " must signature with String and TccContext");
         }
-
 
     }
 

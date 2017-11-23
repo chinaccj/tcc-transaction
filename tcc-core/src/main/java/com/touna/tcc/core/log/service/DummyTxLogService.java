@@ -1,5 +1,9 @@
 package com.touna.tcc.core.log.service;
 
+import com.touna.tcc.core.log.dao.model.Tx;
+
+import java.util.List;
+
 /**
  * Created by chenchaojian on 17/6/1.
  * 空的事务记录类。用途：
@@ -19,7 +23,7 @@ public class DummyTxLogService implements TxLogService {
     }
 
     @Override
-    public void finish(String xid, long beginTimeMillis) {
+    public void finish(String xid) {
 
     }
 
@@ -31,5 +35,10 @@ public class DummyTxLogService implements TxLogService {
     @Override
     public void rollbackFail(String xid) {
 
+    }
+
+    @Override
+    public List<Tx> getExceptionalTxs() {
+        return null;
     }
 }

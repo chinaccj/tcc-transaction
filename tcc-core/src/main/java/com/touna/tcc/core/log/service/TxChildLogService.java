@@ -1,5 +1,7 @@
 package com.touna.tcc.core.log.service;
 
+import com.touna.tcc.core.log.dao.model.TxChild;
+
 import java.util.List;
 
 /**
@@ -17,16 +19,20 @@ public interface TxChildLogService {
      * @param paramValues  为了序列化和反序列化方便，paramValues存储的是 List<Object[]>通过kryo 序列化的结果
      */
     void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod,
-                          String rollbackMethod, Class[] paramsTypes, Object []paramValues);
+                          String rollbackMethod, Class[] paramsTypes, Object []paramValues,String dubboVersion);
+
 
     void tryFail(int sequence ,String xid, String cXid, String clsName, String commitMethod,
-                    String rollbackMethod, Class[] paramsTypes, Object []paramValues);
+                    String rollbackMethod, Class[] paramsTypes, Object []paramValues,String dubboVersion);
 
-    void finish(String xid,String cXid,long beginTimeMillis);
+
+    void finish(String xid,String cXid);
 
     void confirmFail(String xid,String cXid);
 
     void rollbackFail(String xid,String cXid);
 
+
+    List<TxChild> getChildTxsByXid(String xid);
 
 }

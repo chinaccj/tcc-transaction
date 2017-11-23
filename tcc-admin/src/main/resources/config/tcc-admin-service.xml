@@ -17,25 +17,8 @@
     <aop:aspectj-autoproxy proxy-target-class="false" />
 
     <!-- DAO scan -->
-    <context:component-scan base-package="com.touna.tcc.admin" />
-
-
-
-    <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations">
-            <list>
-                <value>classpath:config/ds.conf</value>
-                <value>classpath:config/settings.properties</value>
-            </list>
-        </property>
-        <property name="fileEncoding" value="UTF-8" />
-    </bean>
-
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
-        <property name="properties" ref="configProperties" />
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-    </bean>
-
+    <!--<context:component-scan base-package="com.touna.tcc.admin" />-->
+    <!--<context:component-scan base-package="com.touna.tcc.admin.service" />-->
 
 
     <bean id="applicationConfig" class="com.alibaba.dubbo.config.ApplicationConfig">
@@ -54,6 +37,16 @@
         <property name="registryConfig" ref="registryConfig"/>
     </bean>
 
+    <!--bean id tccTransaction 不能更改-->
+    <bean id="tccTransaction" class="com.touna.tcc.dubbo.transaction.DubboTransactionManager">
+        <!--tcc commit/rollback 方法序列化分配空间（字节数）。分配大小依据TccContext的大小。
+        如果TccContext都没用上，设置128足够-->
+        <constructor-arg value="1024"/>
+        <property name="txLogService" ref="txLogService"></property>
+        <property name="txChildLogService" ref="txChildLogService"></property>
+    </bean>
+
+    <import resource="classpath*:config/tcc-core-service.xml"/>
 
 </beans>
 

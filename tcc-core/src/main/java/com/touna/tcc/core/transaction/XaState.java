@@ -2,6 +2,16 @@ package com.touna.tcc.core.transaction;
 
 /**
  * Created by chenchaojian on 17/5/29.
+ *    begin
+ *     |
+ * try success-try fail-> rollback---success/rollback fail(补偿重试)
+ *     |\
+ *     |  \
+ *     |    \
+ *     |      \
+ *     |        \
+ * commit      commit fail(补偿重试)
+ * success
  */
 public enum  XaState {
     BEGIN(0,"BEGIN"),

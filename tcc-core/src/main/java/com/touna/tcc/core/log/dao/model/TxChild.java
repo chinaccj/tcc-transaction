@@ -31,7 +31,6 @@ public class TxChild {
     private int status;
     private Date beginTime;
     private Date endTime;
-    private long duration;
 
 
     private String clsName;
@@ -43,11 +42,25 @@ public class TxChild {
     /**
      * 参数类型列表 类型直接使用','分离
      */
-    private String paramesTypes;
+    private byte paramesTypes[];
     /**
      * 参数列表序列号
      */
-    private String paramesValues;
+    private byte paramesValues[];
+
+    /**
+     * dubbo version
+     */
+    private String dubboVersion;
+
+    /**
+     * 冗余字段
+     */
+    private Class[] paramsTypesArray;
+    /**
+     * 冗余字段
+     */
+    private Object[] paramValuesArray;
 
     public String getXid() {
         return xid;
@@ -82,13 +95,6 @@ public class TxChild {
         this.endTime = endTime;
     }
 
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
 
     public String getClsName() {
         return clsName;
@@ -114,19 +120,19 @@ public class TxChild {
         this.rollbackMethod = rollbackMethod;
     }
 
-    public String getParamesTypes() {
+    public byte[] getParamesTypes() {
         return paramesTypes;
     }
 
-    public void setParamesTypes(String paramesTypes) {
+    public void setParamesTypes(byte[] paramesTypes) {
         this.paramesTypes = paramesTypes;
     }
 
-    public String getParamesValues() {
+    public byte[] getParamesValues() {
         return paramesValues;
     }
 
-    public void setParamesValues(String paramesValues) {
+    public void setParamesValues(byte[] paramesValues) {
         this.paramesValues = paramesValues;
     }
 
@@ -144,5 +150,29 @@ public class TxChild {
 
     public void setBeginTime(Date beginTime) {
         this.beginTime = beginTime;
+    }
+
+    public Class[] getParamsTypesArray() {
+        return paramsTypesArray;
+    }
+
+    public void setParamsTypesArray(Class[] paramsTypesArray) {
+        this.paramsTypesArray = paramsTypesArray;
+    }
+
+    public Object[] getParamValuesArray() {
+        return paramValuesArray;
+    }
+
+    public void setParamValuesArray(Object[] paramValuesArray) {
+        this.paramValuesArray = paramValuesArray;
+    }
+
+    public String getDubboVersion() {
+        return dubboVersion;
+    }
+
+    public void setDubboVersion(String dubboVersion) {
+        this.dubboVersion = dubboVersion;
     }
 }

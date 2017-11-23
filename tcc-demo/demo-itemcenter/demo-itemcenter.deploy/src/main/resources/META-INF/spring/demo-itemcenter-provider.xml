@@ -28,7 +28,7 @@
     <!-- 监控中心配置 -->
     <dubbo:monitor protocol="registry" />
 
-    <dubbo:service interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" ref="itemServicefacade"/>
+    <dubbo:service interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" ref="itemServicefacade" version="1.0.0"/>
 
     <import resource="classpath*:config/demo-itemcenter-service.xml" />
 

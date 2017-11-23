@@ -30,7 +30,6 @@
 
     <dubbo:service interface="com.touna.tcc.demo.pay.facade.intf.AccountFacade" ref="accountServicefacade"/>
 
-    <import resource="classpath*:config/demo-pay-service.xml" />
     <dubbo:protocol name="dubbo" port="20882"/>
 
     <import resource="classpath*:config/demo-pay-service.xml" />

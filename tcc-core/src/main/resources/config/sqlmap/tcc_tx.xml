@@ -9,7 +9,6 @@
 	<result property="status" column="status" jdbcType="INTEGER"/>
 	<result property="beginTime" column="begin_time" jdbcType="TIMESTAMP" />
 	<result property="endTime" column="end_time" jdbcType="TIMESTAMP" />
-	<result property="duration" column="duration" jdbcType="INTEGER"/>
   </resultMap>
 
 	<update id="updateState" parameterType="tx">
@@ -17,7 +16,7 @@
     </update>
 
 	<update id="update" parameterType="tx">
-		update tcc_tx set status=#{status},end_time=#{endTime},duration=#{duration} where xid=#{xid}
+		update tcc_tx set status=#{status},end_time=#{endTime} where xid=#{xid}
 	</update>
     
     <insert id="insert" parameterType="tx">
@@ -32,5 +31,9 @@
 
 	<select id="selectStatusByXid" parameterType="String" resultType="Integer">
 		select status from tcc_tx where xid=#{xid}
+	</select>
+
+	<select id="selectExceptionalXids"  resultMap="tx">
+		select * from tcc_tx where status in (3,4,5);
 	</select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.touna.tcc.core.log.service;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.List;
 
 import com.touna.tcc.core.log.ClassWrapper;
 import com.touna.tcc.core.log.dao.TxChildDao;
@@ -28,28 +30,27 @@ public class TxChildLogServiceImpl implements TxChildLogService {
     @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
     public void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod,
-                      String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+                      String rollbackMethod, Class[] paramsTypes, Object[] paramValues,String dubboVersion) {
 
         checkParams(xid, cXid, clsName, commitMethod, rollbackMethod, paramsTypes, paramValues);
         TxChild txChild = null;
         try {
-            byte[] bytes = serializer.serialize(new ObjectWrapper(paramValues));
-            String strParamValues = new String(bytes, "UTF-8");
+            byte[] bytesParamValues = serializer.serialize(new ObjectWrapper(paramValues));
 
             //paramsType 128byte足够。
             byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes),128);
-            String strParamsType = new String(clssBytes,"UTF-8");
 
             txChild = new TxChild();
             txChild.setClsName(clsName);
             txChild.setCommitMethod(commitMethod);
             txChild.setcXid(cXid);
-            txChild.setParamesTypes(strParamsType);
-            txChild.setParamesValues(strParamValues);
+            txChild.setParamesTypes(clssBytes);
+            txChild.setParamesValues(bytesParamValues);
             txChild.setRollbackMethod(rollbackMethod);
             txChild.setStatus(XaState.TRY_SUCCESS.getState());
             txChild.setXid(xid);
             txChild.setSequence(sequence);
+            txChild.setDubboVersion(dubboVersion);
 
             txChildDao.insert(txChild);
 
@@ -59,36 +60,34 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             txChildDao.updateState(txChild);
 
         }
-        catch (UnsupportedEncodingException e) {
-            throw new TccLogException(e.getMessage(), e);
-        }
+
 
     }
 
+
     @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void tryFail(int sequence, String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+    public void tryFail(int sequence, String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues,String dubboVersion) {
         checkParams(xid, cXid, clsName, commitMethod, rollbackMethod, paramsTypes, paramValues);
 
         TxChild txChild = null;
         try {
             byte[] bytes = serializer.serialize(new ObjectWrapper(paramValues));
-            String strParamValues = new String(bytes, "UTF-8");
 
             //paramsType 128byte足够。
             byte []clssBytes = serializer.serialize(new ClassWrapper(paramsTypes),128);
-            String strParamsType = new String(clssBytes,"UTF-8");
 
             txChild = new TxChild();
             txChild.setClsName(clsName);
             txChild.setCommitMethod(commitMethod);
             txChild.setcXid(cXid);
-            txChild.setParamesTypes(strParamsType);
-            txChild.setParamesValues(strParamValues);
+            txChild.setParamesTypes(clssBytes);
+            txChild.setParamesValues(bytes);
             txChild.setRollbackMethod(rollbackMethod);
             txChild.setStatus(XaState.TRY_FAIL.getState());
             txChild.setXid(xid);
             txChild.setSequence(sequence);
+            txChild.setDubboVersion(dubboVersion);
 
             txChildDao.insert(txChild);
 
@@ -97,10 +96,9 @@ public class TxChildLogServiceImpl implements TxChildLogService {
             //this scene merely occur.only occur while consumer retry (dubbo use FailoverCluster handle timeout exception)
             txChildDao.updateState(txChild);
         }
-        catch (UnsupportedEncodingException e) {
-            throw new TccLogException(e.getMessage(), e);
-        }
+
     }
+
 
     private void checkParams(String xid, String cXid, String clsName, String commitMethod,
                             String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
@@ -115,14 +113,13 @@ public class TxChildLogServiceImpl implements TxChildLogService {
 
     @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void finish(String xid, String cXid,long beginTimeMillis) {
+    public void finish(String xid, String cXid) {
 
         TxChild tx = new TxChild();
         tx.setcXid(cXid);
         tx.setXid(xid);
         tx.setStatus(XaState.FINISH.getState());
         tx.setEndTime(new Date());
-        tx.setDuration(System.currentTimeMillis() - beginTimeMillis);
 
         txChildDao.update(tx);
     }
@@ -147,6 +144,26 @@ public class TxChildLogServiceImpl implements TxChildLogService {
         tx.setStatus(XaState.ROLLBACK_FAIL.getState());
 
         txChildDao.updateState(tx);
+    }
+
+    @Override
+    public List<TxChild> getChildTxsByXid(String xid) {
+        List<TxChild> list = txChildDao.getChildTxsByXid(xid);
+        //需要反序列化
+        for(TxChild txChild: list){
+            byte[] paramesTypes = txChild.getParamesTypes();
+            byte[] paramesValues = txChild.getParamesValues();
+
+            ClassWrapper classWrapper = (ClassWrapper)serializer.deserialize(paramesTypes, ClassWrapper.class);
+            txChild.setParamsTypesArray(classWrapper.toClassArray());
+
+
+            ObjectWrapper objectWrapper = (ObjectWrapper)serializer.deserialize(paramesValues, ObjectWrapper.class);
+            txChild.setParamValuesArray(objectWrapper.toObjectArray());
+
+        }
+
+        return list;
     }
 
     public Serializer getSerializer() {

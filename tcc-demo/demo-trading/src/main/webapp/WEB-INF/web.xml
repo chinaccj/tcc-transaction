@@ -23,14 +23,6 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<filter>
-		<filter-name>logFilter</filter-name>
-		<filter-class>com.touna.tcc.demo.trading.web.controller.filter.LogFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>logFilter</filter-name>
-		<url-pattern>*</url-pattern>
-	</filter-mapping>
 	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>

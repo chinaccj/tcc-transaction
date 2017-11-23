@@ -8,10 +8,16 @@
   </parent>
   <groupId>com.touna</groupId>
   <artifactId>demo-pay.service</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${project.parent.version}</version>
   <packaging>pom</packaging>
   <name>demo-pay.service</name>
   <dependencies>
+    <!--just for test-->
+    <dependency>
+      <groupId>com.touna.loan</groupId>
+      <artifactId>log-service</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>com.touna</groupId>
       <artifactId>demo-itemcenter.facade</artifactId>
@@ -23,7 +29,6 @@
     <dependency>
       <groupId>com.touna</groupId>
       <artifactId>demo-pay.facade</artifactId>
-      <!--<version>${demo-pay.facade.version}</version>-->
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -32,14 +37,12 @@
 
 
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
-      <version>${aspectjweaver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -86,4 +89,19 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
   </dependencies>
+  <build>
+      <plugins>
+        <!--继承 tcc-transaction pom.xml pluginManagement 的插件配置-->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+        </plugin>
+      </plugins>
+  </build>
+
 </project>

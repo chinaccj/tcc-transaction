@@ -63,8 +63,7 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
                     Method method = proxy.getClass().getMethod(rollbackMethod, parameterTypes);
                     method.invoke(proxy, paramValues);
-                    txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid(),
-                            tx.getBeginTimeMillis());
+                    txChildLogService.finish(tx.getXid(), invokeMetadata.getcXid());
                 }catch (Throwable ex){
                     txChildLogService.rollbackFail(tx.getXid(), invokeMetadata.getcXid());
                     throw ex;
@@ -72,7 +71,7 @@ public class DubboTransactionManager extends AbstractTransactionManager
 
             }
 
-            txLogService.finish(xid, tx.getBeginTimeMillis());
+            txLogService.finish(xid);
 
         } catch (Throwable e) {
             txLogService.rollbackFail(xid);
@@ -114,14 +113,14 @@ public class DubboTransactionManager extends AbstractTransactionManager
                     Method method = proxy.getClass().getMethod(commitMethod, parameterTypes);
                     method.invoke(proxy, paramValues);
 
-                    txChildLogService.finish(xid, invokeMetadata.getcXid(), tx.getBeginTimeMillis());
+                    txChildLogService.finish(xid, invokeMetadata.getcXid());
                 }catch (Throwable ex){
                     txChildLogService.confirmFail(xid, invokeMetadata.getcXid());
                     throw ex;
                 }
             }
 
-            txLogService.finish(xid, tx.getBeginTimeMillis());
+            txLogService.finish(xid);
 
         } catch (Throwable ex) {
             txLogService.comfirmFail(xid);

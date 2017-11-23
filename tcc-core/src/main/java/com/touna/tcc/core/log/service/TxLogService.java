@@ -1,7 +1,10 @@
 package com.touna.tcc.core.log.service;
 
+import com.touna.tcc.core.log.dao.model.Tx;
 import com.touna.tcc.core.transaction.Participant;
 import com.touna.tcc.core.transaction.XaState;
+
+import java.util.List;
 
 /**
  * Created by chenchaojian on 17/5/25.
@@ -22,11 +25,13 @@ public interface TxLogService {
 
     void trySuccess(String xid);
 
-    void finish(String xid,long beginTimeMillis);
+    void finish(String xid);
 
     void comfirmFail(String xid);
 
     void rollbackFail(String xid);
 
+    //获取有异常的事务
+    List<Tx> getExceptionalTxs();
 
 }

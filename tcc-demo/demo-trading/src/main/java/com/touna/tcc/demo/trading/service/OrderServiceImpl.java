@@ -83,4 +83,9 @@ public class OrderServiceImpl implements OrderService {
         accountFacade.tg5Api2(xid);
     }
 
+    @Override
+    public void testDummyTry(String xid) {
+
+    }
+
 }

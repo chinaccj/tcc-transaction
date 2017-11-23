@@ -1,1 +1,2 @@
 TccTransactionTracer=com.touna.tcc.dubbo.filter.TccTransactionFilter
+DubboTracingVariableDetachment=com.touna.loan.log.service.filter.dubbo.DubboTracingVariableDetachment

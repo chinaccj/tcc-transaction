@@ -41,12 +41,6 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
     </dependency>
-    <!-- for test end -->
-    <!-- logstash json encoder -->
-    <dependency>
-      <groupId>net.logstash.logback</groupId>
-      <artifactId>logstash-logback-encoder</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -63,32 +57,22 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      <version>${spring3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <version>${spring3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>${spring3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>${spring3.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${spring3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>${spring3.version}</version>
     </dependency>
   </dependencies>
 </project>

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by chenchaojian on 17/5/25.
@@ -36,12 +37,11 @@ public class TxLogServiceImpl implements TxLogService {
 
     @Transactional(value = "tccTransactionManager",propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void finish(String xid,long beginTimeMillis) {
+    public void finish(String xid) {
         Tx tx = new Tx();
         tx.setXid(xid);
         tx.setStatus(XaState.FINISH.getState());
         tx.setEndTime(new Date());
-        tx.setDuration(System.currentTimeMillis() - beginTimeMillis);
 
         txDao.update(tx);
     }
@@ -64,6 +64,11 @@ public class TxLogServiceImpl implements TxLogService {
         tx.setStatus(XaState.ROLLBACK_FAIL.getState());
 
         txDao.updateState(tx);
+    }
+
+    @Override
+    public List<Tx> getExceptionalTxs() {
+        return txDao.selectExceptionalXids();
     }
 
     public TxDao getTxDao() {

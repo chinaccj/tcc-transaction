@@ -1,5 +1,9 @@
 package com.touna.tcc.core.log.service;
 
+import com.touna.tcc.core.log.dao.model.TxChild;
+
+import java.util.List;
+
 /**
  * Created by chenchaojian on 17/6/1.
  * 空的子事务记录类。用途：
@@ -9,17 +13,19 @@ package com.touna.tcc.core.log.service;
  */
 public class DummyTxChildLogService implements TxChildLogService{
     @Override
-    public void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+    public void trySuccess(int sequence ,String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes
+            , Object[] paramValues,String dubboVersion) {
 
     }
 
     @Override
-    public void tryFail(int sequence, String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes, Object[] paramValues) {
+    public void tryFail(int sequence, String xid, String cXid, String clsName, String commitMethod, String rollbackMethod, Class[] paramsTypes,
+                        Object[] paramValues,String dubboVersion) {
 
     }
 
     @Override
-    public void finish(String xid, String cXid, long beginTimeMillis) {
+    public void finish(String xid, String cXid) {
 
     }
 
@@ -31,5 +37,10 @@ public class DummyTxChildLogService implements TxChildLogService{
     @Override
     public void rollbackFail(String xid, String cXid) {
 
+    }
+
+    @Override
+    public List<TxChild> getChildTxsByXid(String xid) {
+        return null;
     }
 }

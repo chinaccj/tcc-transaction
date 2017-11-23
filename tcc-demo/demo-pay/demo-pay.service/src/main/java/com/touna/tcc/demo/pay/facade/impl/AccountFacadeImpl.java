@@ -1,9 +1,12 @@
 package com.touna.tcc.demo.pay.facade.impl;
 
+import com.touna.tcc.core.Attachment;
 import com.touna.tcc.core.TccContext;
 import com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade;
 import com.touna.tcc.demo.pay.facade.intf.AccountFacade;
 import com.touna.tcc.demo.pay.service.intf.AccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 
@@ -11,6 +14,9 @@ import javax.annotation.Resource;
  * Created by chenchaojian on 17/5/27.
  */
 public class AccountFacadeImpl implements AccountFacade {
+    private static final Logger logger = LoggerFactory.getLogger(AccountFacadeImpl.class);
+
+
     @Resource
     protected AccountService accountService;
 
@@ -23,16 +29,20 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public void payCommit(String xid,TccContext tccContext) {
+    public Boolean payCommit(String xid,TccContext tccContext) {
         String accountId = (String)tccContext.getAttachment("accountId");
-        System.out.println("test tcc Context accountId = "+accountId);
+        System.out.println("payCommit tcc Context accountId = " + accountId);
         accountService.payCommit(xid, accountId);
+
+        return true;
     }
 
     @Override
-    public void payRollback(String xid,TccContext tccContext) {
+    public Boolean payRollback(String xid,TccContext tccContext) {
         String accountId = (String)tccContext.getAttachment("accountId");
         accountService.payRollback(xid, accountId);
+
+        return false;
     }
 
 
@@ -222,6 +232,22 @@ public class AccountFacadeImpl implements AccountFacade {
     @Override
     public void tg5Api2Rollback(String xid,TccContext tccContext) {
         itemFacade.testRollback(xid,tccContext);
+
+    }
+
+    @Override
+    public void testDummyTry(String xid, @Attachment(key = "accountId") String accountId, Double amount) {
+        System.out.println("xid="+xid+" accountId="+accountId+" amount="+amount);
+        logger.info("xid="+xid+" accountId="+accountId+" amount="+amount);
+    }
+
+    @Override
+    public void testDummyTryCommit(String xid, TccContext tccContext) {
+
+    }
+
+    @Override
+    public void testDummyTryRollback(String xid, TccContext tccContext) {
 
     }
 

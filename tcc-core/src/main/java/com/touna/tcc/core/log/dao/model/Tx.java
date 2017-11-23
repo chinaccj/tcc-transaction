@@ -15,9 +15,8 @@ public class Tx {
      * 参考 com.touna.tcc.core.transaction.XaState
      */
     private int status;
-    private Date begainTime;
+    private Date beginTime;
     private Date endTime;
-    private long duration;
 
 
     public Tx() {
@@ -39,12 +38,12 @@ public class Tx {
         this.status = status;
     }
 
-    public Date getBegainTime() {
-        return begainTime;
+    public Date getBeginTime() {
+        return beginTime;
     }
 
-    public void setBegainTime(Date begainTime) {
-        this.begainTime = begainTime;
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
     }
 
     public Date getEndTime() {
@@ -55,11 +54,5 @@ public class Tx {
         this.endTime = endTime;
     }
 
-    public long getDuration() {
-        return duration;
-    }
 
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
 }

@@ -28,6 +28,8 @@ public class OrderServiceTest extends BaseTest {
 
     @Test
     public void testPlaceOrder(){
+        String classpath = System.getProperty("java.class.path");
+        System.out.println(classpath);
         String xid = XidGenerator.getNewXid("OD");
 
         orderService.placeOrder(xid, "1", "1", 1.00);

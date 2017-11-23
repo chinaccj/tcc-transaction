@@ -18,7 +18,9 @@ package com.touna.tcc.demo.pay.deploy;
 public class Bootstrap {
 
 	public static void main(String[] args) {
-        com.alibaba.dubbo.container.Main.main(args);
+
+		System.out.println(System.getProperty("java.class.path"));
+		com.alibaba.dubbo.container.Main.main(args);
 	}
 
 }

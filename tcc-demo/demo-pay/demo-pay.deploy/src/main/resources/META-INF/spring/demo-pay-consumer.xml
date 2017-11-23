@@ -22,7 +22,7 @@
 	        http://code.alibabatech.com/schema/dubbo
 	        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-    <dubbo:reference id="itemFacade" interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" loadbalance="roundrobin">
+    <dubbo:reference id="itemFacade" interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" loadbalance="roundrobin" version="1.0.0">
     </dubbo:reference>
 
 </beans>

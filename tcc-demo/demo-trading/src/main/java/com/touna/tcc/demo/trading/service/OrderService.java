@@ -39,6 +39,11 @@ public interface OrderService {
     void placeOrderWithTCCUnSpecifications(String xid);
 
 
+    /**
+     * 测试1pc 场景。try阶段什么都不做，commit阶段做事务处理
+     * @param xid
+     */
+    void testDummyTry(String xid);
 
 
 }

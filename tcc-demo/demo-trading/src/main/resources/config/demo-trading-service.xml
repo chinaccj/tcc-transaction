@@ -45,7 +45,7 @@
     <dubbo:reference id="accountFacade" interface="com.touna.tcc.demo.pay.facade.intf.AccountFacade" loadbalance="roundrobin">
     </dubbo:reference>
 
-    <dubbo:reference id="itemFacade" interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" loadbalance="roundrobin">
+    <dubbo:reference id="itemFacade" interface="com.touna.tcc.demo.itemcenter.facade.intf.ItemFacade" loadbalance="roundrobin" version="1.0.0">
     </dubbo:reference>
 
 

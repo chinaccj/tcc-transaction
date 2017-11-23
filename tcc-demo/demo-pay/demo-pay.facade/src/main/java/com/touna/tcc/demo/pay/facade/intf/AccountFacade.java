@@ -17,9 +17,9 @@ public interface AccountFacade {
     @TwoPhaseBusinessAction(commitMethod="payCommit",rollbackMethod="payRollback")
     void pay(String xid,@Attachment(key="accountId") String accountId,Double amount);
 
-    void payCommit(String xid,TccContext tccContext);
+    Boolean payCommit(String xid,TccContext tccContext);
 
-    void payRollback(String xid,TccContext tccContext);
+    Boolean payRollback(String xid,TccContext tccContext);
 
 
 
@@ -110,4 +110,16 @@ public interface AccountFacade {
     void tg5Api2Rollback(String xid,TccContext tccContext);
 
 
+
+    /**
+     * 支付预处理
+     * @param accountId
+     * @param amount
+     */
+    @TwoPhaseBusinessAction(commitMethod="testDummyTryCommit",rollbackMethod="testDummyTryRollback")
+    void testDummyTry(String xid,@Attachment(key="accountId") String accountId,Double amount);
+
+    void testDummyTryCommit(String xid,TccContext tccContext);
+
+    void testDummyTryRollback(String xid,TccContext tccContext);
 }
